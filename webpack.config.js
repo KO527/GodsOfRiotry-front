@@ -1,7 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 
-module.exports = {
+module.exports = env => {
     devServer: {
         inline: true,
         contentBase: './src',
@@ -9,7 +9,11 @@ module.exports = {
         port: 8080
     },
     devtool: 'cheap-module-eval-source-map',
-    entry: './dev/js/index.js',
+    entry: {
+        'webpack-dev-server/client?http://0.0.0.0:80',
+        'webpack/hot/only-dev-server',
+        './dev/js/index.js'
+    },
     module: {
         loaders: [
             {
