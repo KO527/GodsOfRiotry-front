@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {Component} from 'react';
 
-const App = () => (
+export default App extends Component = () => (
     <div>
-        <h2>User List</h2>
-        <hr />
-        <h2>User Details</h2>
+	<Intro>
+    	<PlaylistSearchBar/>
+        <PossibleMatches/>
+	<GorClothing/>
+	<EventTicketsSearchBar/>
     </div>
 );
 
