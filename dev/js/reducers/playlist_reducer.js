@@ -1,9 +1,9 @@
-const INITIAL_STATE = {user_preference: [], playlist: null};
+const INITIAL_PLAYLIST = {playlist: action.payload.data};
 
-export default function(state=INITIAL_STATE, action){
+export default function(state = INITIAL_PLAYLIST, action){
 	switch(action.type){
-		case GET_ARTICLES:
-			return {...state, user_preference: action.payload.data}
+		case REPLACE_INITIAL_PLAYLIST:
+			return {...state, playlist: action.payload.data}
 		default:
 			return state;
 	}
