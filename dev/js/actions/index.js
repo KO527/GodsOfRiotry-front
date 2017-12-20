@@ -20,3 +20,24 @@ export function replaceInitialPlaylist(id){
 	   payload: request
         }
 }
+
+export function setContemplatedPiece(id){
+	const request = axios.post('${API_URL}/visibleGorClothing/${visible_gor_clothing_id}/${contemplated_piece_id}');
+
+	return{ 
+		
+		type: SET_CONTEMPLATED_PIECE,
+		payload: request
+	};
+}
+
+export function getAncillaryPieces(){
+	const request = axios.get('${API_URL}/PossibleMatches/show');
+	
+	return{
+		type: GET_ANCILLARY_PIECES,
+		payload: request
+	};
+}
+
+
