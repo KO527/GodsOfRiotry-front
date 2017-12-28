@@ -11,6 +11,7 @@ const allReducers = combineReducers({
  form: formReducer, 
  playlist: PlaylistReducer,
  eventOptions: eventTicketReducer
+ possibleMatches: PossibleMatchesReducer
 });
 
 export default allReducers;
