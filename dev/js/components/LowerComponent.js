@@ -4,7 +4,7 @@ class LowerComponent extends React.Component{
 	    super(props);
 	    this.state = {
 		enabled: true,
-		timeout: 4000
+		timeout: 5000
 	    };
 	}
         
@@ -15,14 +15,12 @@ class LowerComponent extends React.Component{
                         piece = this.indexOf(LowerComponents);
                         if (event.which == 37){
                                 piece--;
-                                TweenMax.fromTo(LowerComponents[piece], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: callback});
-                        	this.setState({enabled: false});
+                                TweenMax.fromTo(LowerComponents[piece], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: callback});}
 				this.props.evaluatePiece(this.props.id) ? this.setState({enabled: false}) : this.props.toggleToPiece();
 			}
                         else if (event.which == 39){
                                 piece++;
                                 TweenMax.fromTo(LowerComponents[piece], 0.3, {x: 250, opacity: 1}, {x: 0, opacity: 0, onComplete: callback});
-                        	this.setState({enabled: false});
 				this.props.evaluatePiece(this.props.id) : this.setState({enabled: false}) : this.props.toggleToPiece();
 			}
                         else if (event.which == 38){

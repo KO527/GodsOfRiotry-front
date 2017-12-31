@@ -44,7 +44,7 @@ class PossibleMatches extends React.Component{
 					});
 				}
 			});
-		}, 600);
+		}, 6000);
 	
 		return match;
 	}
@@ -61,6 +61,7 @@ class PossibleMatches extends React.Component{
 	}
 
 	render(){
+		<Wardrobe className = 'Wardrobe_Container' lowerComponent={this.state.currentLowerComponent} upperComponent={this.state.currentUpperComponent} snapshot={} />
 		<div className='PossibleMatches_Container'>
 			  return(
 			     <TransitionGroupPlus>
