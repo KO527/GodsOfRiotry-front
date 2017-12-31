@@ -3,7 +3,7 @@ class UpperComponent extends React.Component{
 		super(props);
 		this.state = {
 			enabled: false,
-			timeout: 4000
+			timeout: 5000
 		}
 	}
 
@@ -11,8 +11,7 @@ class UpperComponent extends React.Component{
 
 	componentWillEnter(event, callback){
                if (document.activeElement == this){
-                        id = this.props.id;
-			piece = id.indexOf(UpperComponents);
+			var piece = this.indexOf(UpperComponents);
                         if (event.which == 37){
                                 piece--;
                                 TweenMax.fromTo(UpperComponents[piece], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: callback});
@@ -21,7 +20,7 @@ class UpperComponent extends React.Component{
                         else if (event.which == 39){
                                 piece++;
                                 TweenMax.fromTo(UpperComponents[piece], 0.3, {x: 250, opacity: 0}, {x: 0, opacity: 1, onComplete: callback});
-                        	this.props.evalutePiece(this.props.id);
+                        	this.props.evalutePiece(this.props.id) ? this.setState({enabled: false}); : this.props.toggleToPiece();
 			}
 			else if (event.which == 40){
 				this.props.switchComponent();
@@ -34,7 +33,7 @@ class UpperComponent extends React.Component{
         }
 
 	componentWillLeave(event, callback){
-                var piece = this.container;
+                var piece = this.indexOf(UpperComponents);
                 if (document.activeElement == this){
                         if (event.which == 37){
                                 TweenMax.fromTo(piece, 0.2, {x: 0, opacity: 1}, {x: 250, opacity: 0, onComplete: callback});

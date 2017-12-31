@@ -12,19 +12,18 @@ class LowerComponent extends React.Component{
        
 	componentWillEnter(event, callback){
                if (document.activeElement == this){
-			id = this.props.id
-                        piece = id.indexOf(LowerComponents);
+                        piece = this.indexOf(LowerComponents);
                         if (event.which == 37){
                                 piece--;
                                 TweenMax.fromTo(LowerComponents[piece], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: callback});
                         	this.setState({enabled: false});
-				this.props.evaluatePiece(this.props.id) ? 
+				this.props.evaluatePiece(this.props.id) ? this.setState({enabled: false}) : this.props.toggleToPiece();
 			}
                         else if (event.which == 39){
                                 piece++;
                                 TweenMax.fromTo(LowerComponents[piece], 0.3, {x: 250, opacity: 1}, {x: 0, opacity: 0, onComplete: callback});
                         	this.setState({enabled: false});
-				this.props.evaluatePiece(this.props.id) : 
+				this.props.evaluatePiece(this.props.id) : this.setState({enabled: false}) : this.props.toggleToPiece();
 			}
                         else if (event.which == 38){
 				this.props.switchComponent();
@@ -41,7 +40,7 @@ class LowerComponent extends React.Component{
 	
 	
 	componentWillLeave(event, callback){
-		var piece = this.container;
+		var piece = this;
 		if (document.activeElement == this){
 			if (event.which == 37){
 				TweenMax.fromTo(piece, 0.2, {x:0, opacity: 1}, {x: 250, opacity: 0, onComplete: callback})

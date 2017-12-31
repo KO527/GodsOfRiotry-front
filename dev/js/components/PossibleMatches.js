@@ -12,6 +12,8 @@ class PossibleMatches extends React.Component{
 			   currentUpperComponent: this.props.suggestedTops[0],
 			   UpperComponents, LowerComponents: this.props.organizePieces();
 			}
+			UpperComponentEnabled: false,
+			LowerComponentEnabled: false
 		};
 	}
 
@@ -63,12 +65,12 @@ class PossibleMatches extends React.Component{
 			  return(
 			     <TransitionGroupPlus>
 		              {UpperComponents.map(function(topPiece){   
-		              <UpperComponent key={topPiece.id} id={topPiece.id} ref={(piece)=>{this.setState({currentUpperComponent: piece})}} toggleToPiece={this.setState({currentLowerComponent: this.props.suggestedTops[0]}).then(function(){setState of LowerComponent enabled to true})} image={topPiece.image} switchComponent={this.switchFocus} evaluatePiece={isOppositeComponentSuggested} className="topPiece_item"/>
+		              <UpperComponent key={topPiece.id} id={topPiece.id} ref={(piece)=>{this.setState({currentUpperComponent: piece})}} toggleToPiece={this.setState({currentLowerComponent: this.props.suggestedBottoms[0]}).then(function(){if (this.state.LowerComponentEnabled: false){this.setState(LowerComponentEnabled: true)}else{break;}})} image={topPiece.image} isLowerComponentEnabled={this.state.LowerComponentEnabled} switchComponent={this.switchFocus} evaluatePiece={isOppositeComponentSuggested} className="topPiece_item"/>
 			      });}
 		 	     </TransitionGroupPlus>
 			     <TransitionGroupPlus>
 		        	{LowerComponents.map(function(bottomPiece){
-			        <LowerComponent key={bottomPiece.id} id={bottomPiece.id} ref={(piece)=>{this.setState({currentLowerComponent: piece})}} toggleToPiece={this.setState.({currentUpperComponent: this.props.suggestedBottoms[0]}).then(function(){setState of UpperComponent enabled to true})} switchComponent={this.switchFocus} evaluatePiece={isOppositeComponentSuggested} className="bottomPiece_item"/>
+			        <LowerComponent key={bottomPiece.id} id={bottomPiece.id} ref={(piece)=>{this.setState({currentLowerComponent: piece})}} toggleToPiece={this.setState({currentUpperComponent: this.props.suggestedTops[0]}).then(function(){if(this.state.UpperComponentEnabled: false){this.setState(UpperComponentEnabled: true)}})} isUpperComponentEnabled={this.state.UpperComponentEnabled} switchComponent={this.switchFocus} evaluatePiece={isOppositeComponentSuggested} className="bottomPiece_item"/>
 				});}
                              </TransitionGroupPlus>
 			 );
