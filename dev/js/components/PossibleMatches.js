@@ -1,4 +1,4 @@
-class PossibleMatches extends React.Component{
+calass PossibleMatches extends React.Component{
 	constructor(){
 		this.props.getInitialPieces();
 		this.state = {
@@ -61,21 +61,17 @@ class PossibleMatches extends React.Component{
 	}
 
 	render(){
-		<Wardrobe className = 'Wardrobe_Container' lowerComponent={this.state.currentLowerComponent} upperComponent={this.state.currentUpperComponent} snapshot={} />
-		<div className='PossibleMatches_Container'>
-			  return(
-			     <TransitionGroupPlus>
-		              {UpperComponents.map(function(topPiece){   
-		              <UpperComponent key={topPiece.id} id={topPiece.id} ref={(piece)=>{this.setState({currentUpperComponent: piece})}} toggleToPiece={this.setState({currentLowerComponent: this.props.suggestedBottoms[0]}).then(function(){if (this.state.LowerComponentEnabled: false){this.setState(LowerComponentEnabled: true)}else{break;}})} image={topPiece.image} isLowerComponentEnabled={this.state.LowerComponentEnabled} switchComponent={this.switchFocus} evaluatePiece={isOppositeComponentSuggested} className="topPiece_item"/>
-			      });}
-		 	     </TransitionGroupPlus>
-			     <TransitionGroupPlus>
+		 return(
+		       <Wardrobe snapshot = {this.}upperComponent={this.state.currentUpperComponent} lowerComponent={this.state.currentLowerComponent}/>
+	               <div className = "PossibleMatches_Container">
+		            {UpperComponents.map(function(topPiece){  
+				  <UpperComponent key={topPiece.id} id={topPiece.id} ref={(piece)=>{this.setState({currentUpperComponent: piece})}} toggleToPiece={this.setState({currentLowerComponent: this.props.suggestedBottoms[0]}).then(function(){if (this.state.LowerComponentEnabled: false){this.setState(LowerComponentEnabled: true)}else{break;}})} image={topPiece.image} isLowerComponentEnabled={this.state.LowerComponentEnabled} switchComponent={this.switchFocus} evaluatePiece={isOppositeComponentSuggested} className="UpperComponent_Container"/>
+			        });}>
 		        	{LowerComponents.map(function(bottomPiece){
-			        <LowerComponent key={bottomPiece.id} id={bottomPiece.id} ref={(piece)=>{this.setState({currentLowerComponent: piece})}} toggleToPiece={this.setState({currentUpperComponent: this.props.suggestedTops[0]}).then(function(){if(this.state.UpperComponentEnabled: false){this.setState(UpperComponentEnabled: true)}})} isUpperComponentEnabled={this.state.UpperComponentEnabled} switchComponent={this.switchFocus} evaluatePiece={isOppositeComponentSuggested} className="bottomPiece_item"/>
-				});}
-                             </TransitionGroupPlus>
-			 );
-		</div>
+				  <LowerComponent key={bottomPieced.id} id={bottomPiece.id} ref={(piece)=>{this.setState({currentLowerComponent: piece})}} toggleToPiece={this.setState({currentUpperComponent: this.props.suggestedTops[0]}).then(function(){if(this.state.UpperComponentEnabled: false){this.setState(UpperComponentEnabled: true)}})} isUpperComponentEnabled={this.state.UpperComponentEnabled} switchComponent={this.switchFocus} evaluatePiece={isOppositeComponentSuggested} className="LowerComponent_Container">
+				 });}
+		       </div>
+		 );
 	}
 }
 

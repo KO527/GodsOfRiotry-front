@@ -60,9 +60,11 @@ class UpperComponent extends React.Component{
     									      i++;
 									      TweenMax.fromTo(this.props.UpperComponents[j], 0.3, {x: 0, opacity: 1}, {x: -250, opacity: 0});
 									      TweenMax.fromTo(this.props.UpperComponents[i], 0.2, {x: 250, opacity: 0}, {x: 0, opacity: 1, onComplete: callback});
-                                                                        };}/>
-		       <div className='UpperComponent_Container'>
+                                                                        }}/>
+		       <div className='UpperComponent'>
 		         {this.props.image}
+			 {this.props.price}
+			 {this.props.description}
 		       </div>
 		)
 	}
