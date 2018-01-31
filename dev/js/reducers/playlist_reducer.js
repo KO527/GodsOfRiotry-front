@@ -4,6 +4,8 @@ export default function(state = INITIAL_PLAYLIST, action){
 	switch(action.type){
 		case REPLACE_INITIAL_PLAYLIST:
 			return {...state, playlist: action.payload.data}
+		case INITIAL_PLAYLIST: 
+			return {...state, playlist: action.payload.data}
 		default:
 			return state;
 	}
