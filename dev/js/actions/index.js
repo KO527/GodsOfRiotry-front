@@ -1,11 +1,47 @@
-import {INITIAL_PLAYLIST, REPLACE_INITIAL_PLAYLIST, INITIAL_PIECES, SET_CONTEMPLATED_PIECE, GET_ANCILLARY_PIECES, ORGANIZE_PIECES};
+import {SEARCH_TERM, SPORTING_EVENTS, IMMEDIATE_EVENTS, EVENTS_BY_ARTIST, INITIAL_PLAYLIST, REPLACE_INITIAL_PLAYLIST, INITIAL_PIECES, SET_CONTEMPLATED_PIECE, GET_ANCILLARY_PIECES, ORGANIZE_PIECES};
 
-var SC = require('node-soundcloud');
+var SC = require('node-soundcloud'); 
 
 const API_URL = "http://localhost:5000/api/v1";
+const SEAT_GEEK_API = "https://api.seatgeek.com";
+
+export function EventsByArtist(artist){
+	const request = axios.get('${SEAT_GEEK_API}/2/events', :query => {'q' => artist, "datetime_local.gte" => this.event_forecast, "datetime_local.lte" => this.until_eight_months});
+	return {
+		type: EVENTS_BY_ARTIST,
+		payload: request
+	}
+}
+
+export function GiveMeImmEvents(){
+	const request = axios.get('{SEAT_GEEK_API}/2/events', :query => {"genres.slug" => 'pop', "sort" => {"datetime_order" => 'datetime_local.asc', "score_order" => 'score.desc'}, "taxonomies.name" => 'concert', "score.gte" => '0.7', "datetime_local.gte" => this.event_forecast, "datetime_local.lte" => this.until_eight_months, "geoip" => '100mi'})
+
+	return {
+		type: IMMEDIATE_EVENTS,
+		payload: request
+	}
+}
+
+export function ParseSportingEvents(){
+	const request = axios.get('{SEAT_GEEK_API}/2/events', :query => {"genres.slug" => 'pop', "sort" => {"datetime_order" => 'datetime_local.asc', "score_order" => 'score_desc'}, "taxonomies.name => 'concert', "score.gte" => '0.7', "datetime_local.gte" => this.event_forecast, "datetime_local.lte" => this.until_eight_months, "geoip" => '100mi'});
+	
+	return {
+		type: SPORTING_EVENTS,
+		payload: request
+	}
+}
+
+export function for(term){
+	const request = axios.get('{SEAT_GEEK_API}/2/events', :query => {"q" => term});
+	
+	return {
+		type: SEARCH_TERM,
+		payload: request
+	}
+}
 
 export function getInitialPlaylist(){
-	const request = axios.get('${API_URL}/soundcloud');
+	const request = axios.get('${API_URL}/playlist');
 		
 	return{
 	    type: INITIAL_PLAYLIST,
@@ -14,7 +50,7 @@ export function getInitialPlaylist(){
 }
 
 export function replaceInitialPlaylist(id){
-	const request = axios.delete('${API_URL}/soundcloud/${id}');
+	const request = axios.delete('${API_URL}/playlist/${id}');
 
 	return {
 	   type: REPLACE_INITIAL_PLAYLIST,
@@ -32,10 +68,9 @@ export function getInitialPieces(){
 }
 
 export function setContemplatedPiece(id){
-	const request = axios.post('${API_URL}/visibleGorClothing/${visible_gor_clothing_id}/${contemplated_piece_id}');
+	const request = axios.post('${API_URL}/visibleGorClothing/${visible_gor_clothing_id}/${contemplated_piece_id});
 
-	return{ 
-		
+	return{ 	
 		type: SET_CONTEMPLATED_PIECE,
 		payload: request
 	};
@@ -58,5 +93,4 @@ export function organizePieces(){
 		payload: request
 	};
 }
-
-
+  

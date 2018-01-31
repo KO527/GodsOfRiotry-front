@@ -62,7 +62,7 @@ calass PossibleMatches extends React.Component{
 
 	render(){
 		 return(
-		       <Wardrobe snapshot = {this.}upperComponent={this.state.currentUpperComponent} lowerComponent={this.state.currentLowerComponent}/>
+		       <Wardrobe snapshot = {this.} upperComponent={this.state.currentUpperComponent} lowerComponent={this.state.currentLowerComponent}/>
 	               <div className = "PossibleMatches_Container">
 		            {UpperComponents.map(function(topPiece){  
 				  <UpperComponent key={topPiece.id} id={topPiece.id} ref={(piece)=>{this.setState({currentUpperComponent: piece})}} toggleToPiece={this.setState({currentLowerComponent: this.props.suggestedBottoms[0]}).then(function(){if (this.state.LowerComponentEnabled: false){this.setState(LowerComponentEnabled: true)}else{break;}})} image={topPiece.image} isLowerComponentEnabled={this.state.LowerComponentEnabled} switchComponent={this.switchFocus} evaluatePiece={isOppositeComponentSuggested} className="UpperComponent_Container"/>
