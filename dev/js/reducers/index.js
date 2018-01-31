@@ -9,8 +9,8 @@ import PlaylistReducer from '../playlist_reducer';
 
 const allReducers = combineReducers({
  form: formReducer, 
- playlist: PlaylistReducer,
- eventOptions: eventTicketReducer
+ Playlist: PlaylistReducer,
+ eventOptions: eventTicketReducer,
  possibleMatches: PossibleMatchesReducer
 });
 
