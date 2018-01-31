@@ -14,7 +14,8 @@ class UpperComponent extends React.Component{
 			var piece = this.indexOf(UpperComponents);
                         if (event.which == 37){
                                 piece--;
-                                TweenMax.fromTo(UpperComponents[piece], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: callback});
+                               	this.props.makeStandalone
+				TweenMax.fromTo(UpperComponents[piece], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: callback});
                         	this.props.evaluatePiece(this.props.id) ? this.setState({enabled: false}); : this.props.toggleToPiece();
 			}
                         else if (event.which == 39){

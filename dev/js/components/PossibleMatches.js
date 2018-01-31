@@ -1,17 +1,18 @@
-calass PossibleMatches extends React.Component{
+class PossibleMatches extends React.Component{
 	constructor(){
 		this.props.getInitialPieces();
 		this.state = {
-			if (this.props.contemplatedPiece.merch_type == 'top'){
-			   currentLowerComponent: this.props.suggestedBottoms[0],
-  			   currentUpperComponent: this.props.contemplatedPiece,
-			   LowerComponents, UpperComponents: this.props.organizePieces();
-			}
-			else{
-			   currentLowerComponent: this.props.contemplatedPiece,
-			   currentUpperComponent: this.props.suggestedTops[0],
-			   UpperComponents, LowerComponents: this.props.organizePieces();
-			}
+		    if (this.props.contemplatedPiece.merch_type == 'top'){
+		        currentLowerComponent: this.props.suggestedBottoms[0],
+  			currentUpperComponent: this.props.contemplatedPiece,
+			LowerComponents, UpperComponents: this.props.organizePieces();
+		    }
+	            else if (this.props.contemplatedPiece.merch_type == 'bottom'){
+			currentLowerComponent: this.props.contemplatedPiece,
+			currentUpperComponent: this.props.suggestedTops[0],
+			UpperComponents, LowerComponents: this.props.organizePieces();
+		    }
+			currentComponent: {whichComponent: null, whichPiece: null}
 			UpperComponentEnabled: false,
 			LowerComponentEnabled: false
 		};
@@ -23,7 +24,7 @@ calass PossibleMatches extends React.Component{
 		}
 	}
 
-
+	
 	isOppositeComponentSuggested(whichComponent){
 		var match = false;
 		_.debounce((whichComponent) => {
@@ -62,13 +63,13 @@ calass PossibleMatches extends React.Component{
 
 	render(){
 		 return(
-		       <Wardrobe snapshot = {this.} upperComponent={this.state.currentUpperComponent} lowerComponent={this.state.currentLowerComponent}/>
+		       <Wardrobe upperComponent={this.state.currentUpperComponent} lowerComponent={this.state.currentLowerComponent} currentComponent = {this.state.currentComponent} />
 	               <div className = "PossibleMatches_Container">
 		            {UpperComponents.map(function(topPiece){  
-				  <UpperComponent key={topPiece.id} id={topPiece.id} ref={(piece)=>{this.setState({currentUpperComponent: piece})}} toggleToPiece={this.setState({currentLowerComponent: this.props.suggestedBottoms[0]}).then(function(){if (this.state.LowerComponentEnabled: false){this.setState(LowerComponentEnabled: true)}else{break;}})} image={topPiece.image} isLowerComponentEnabled={this.state.LowerComponentEnabled} switchComponent={this.switchFocus} evaluatePiece={isOppositeComponentSuggested} className="UpperComponent_Container"/>
+				  <UpperComponent key={topPiece.id} id={topPiece.id} ref={(piece)=>{this.setState({currentUpperComponent: piece})}} setCurrentComponent = {(piece) => this.setState(currentComponent.whichPiece: piece, whichComponent: 'u', lowerComponent: null, upperComponent: null)}  toggleToPiece={this.setState({currentLowerComponent: this.props.suggestedBottoms[0]}).then(function(){if (this.state.LowerComponentEnabled: false){this.setState(LowerComponentEnabled: true)}else{break;}})} image={topPiece.image} isLowerComponentEnabled={this.state.LowerComponentEnabled} switchComponent={this.switchFocus} evaluatePiece={isOppositeComponentSuggested} className={if (this.state.currentComponent.whichComponent == 'l'){'standalonePiece'}else if(this.state.currentComponent.whichComponent == 'l'){'PossibleMatchCollapse'} else{'UpperComponent_Container'}}/>
 			        });}>
 		        	{LowerComponents.map(function(bottomPiece){
-				  <LowerComponent key={bottomPieced.id} id={bottomPiece.id} ref={(piece)=>{this.setState({currentLowerComponent: piece})}} toggleToPiece={this.setState({currentUpperComponent: this.props.suggestedTops[0]}).then(function(){if(this.state.UpperComponentEnabled: false){this.setState(UpperComponentEnabled: true)}})} isUpperComponentEnabled={this.state.UpperComponentEnabled} switchComponent={this.switchFocus} evaluatePiece={isOppositeComponentSuggested} className="LowerComponent_Container">
+				  <LowerComponent key={bottomPiece.id} id={bottomPiece.id} ref={(piece)=>{this.setState({currentLowerComponent: piece})}} setCurrentComponent = {(piece) => this.setState(currentComponent.whichPiece: piece, currentComponent.whichComponent: 'l', upperComponent: null, lowerComponent: null);}  toggleToPiece={this.setState({currentUpperComponent: this.props.suggestedTops[0]}).then(function(){if(this.state.UpperComponentEnabled: false){this.setState(UpperComponentEnabled: true)}})} isUpperComponentEnabled={this.state.UpperComponentEnabled} switchComponent={this.switchFocus} evaluatePiece={isOppositeComponentSuggested} className={ if (this.state.currentComponent.whichComponent == 'l'){'standalonePiece'} else if(this.state.currentComponent.whichComponent == 'u'){'PossibleMatchCollapse'} else{'LowerComponent_Container'}}>
 				 });}
 		       </div>
 		 );

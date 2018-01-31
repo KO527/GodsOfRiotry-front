@@ -53,6 +53,8 @@ class LowerComponent extends React.Component{
 			break;
 	}
 	
+   	this.props.makeStandalone()
+
 	render(){
 	
 		const {timeout, enabled} = this.state;		
@@ -75,4 +77,7 @@ class LowerComponent extends React.Component{
 	
 		)
 	}
+
 }
+
+
