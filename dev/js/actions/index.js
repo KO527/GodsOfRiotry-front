@@ -5,16 +5,26 @@ var SC = require('node-soundcloud');
 const API_URL = "http://localhost:5000/api/v1";
 const SEAT_GEEK_API = "https://api.seatgeek.com";
 
-export function EventsByArtist(artist){
+export function ParseEventsByArtist(artist){
 	const request = axios.get('${SEAT_GEEK_API}/2/events', :query => {'q' => artist, "datetime_local.gte" => this.event_forecast, "datetime_local.lte" => this.until_eight_months});
+
 	return {
 		type: EVENTS_BY_ARTIST,
 		payload: request
 	}
 }
 
+export function ParseEventsByTeam(team){
+	const request = axios.get('${SEAT_GEEK_API}/2/events', :query => {'q' => team, "datetime_local.gte" => this.event_forecast, "datetime_local.lte => this.until_eight_months, "geoip" => '100mi'});
+
+	return {
+		type: EVENTS_BY_TEAM,
+		payload: request
+	}
+}
+
 export function GiveMeImmEvents(){
-	const request = axios.get('{SEAT_GEEK_API}/2/events', :query => {"genres.slug" => 'pop', "sort" => {"datetime_order" => 'datetime_local.asc', "score_order" => 'score.desc'}, "taxonomies.name" => 'concert', "score.gte" => '0.7', "datetime_local.gte" => this.event_forecast, "datetime_local.lte" => this.until_eight_months, "geoip" => '100mi'})
+	const request = axios.get('{SEAT_GEEK_API}/2/events', :query => {"genres.slug" => 'pop', "sort" => {"datetime_order" => 'datetime_local.asc', "score_order" => 'score.desc'}, "taxonomies.name" => 'concert', "score.gte" => '0.7', "datetime_local.gte" => this.event_forecast, "datetime_local.lte" => this.until_eight_months, "geoip" => '100mi'});
 
 	return {
 		type: IMMEDIATE_EVENTS,
@@ -31,7 +41,7 @@ export function ParseSportingEvents(){
 	}
 }
 
-export function for(term){
+export function queryEvent(term){
 	const request = axios.get('{SEAT_GEEK_API}/2/events', :query => {"q" => term});
 	
 	return {
