@@ -2,7 +2,7 @@ class EventTickets extends React.Component{
 	constructor(){
 		super(props);
 		this.state = {
-				
+			artist: null			
 		}
 	        this.event_forecast = (){
 	      	  var date = new Date();
@@ -27,7 +27,7 @@ class EventTickets extends React.Component{
 			   <div class = 'EventBlock'>	
 				<span className = 'EventTitle'>event.title</span>
 				{event.performers.map((entertainer) => {
-					<span className = 'ArtistName' onClick = {this.props.EventsByArtist(entertainer)}>
+					<span className = 'ArtistName' onClick = (){if (this.state.artist !== entertainer.name){this.props.EventsByArtist(entertainer)}}>
 					entertainer.name
 					</span>
 				});}
