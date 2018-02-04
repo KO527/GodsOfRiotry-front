@@ -18,27 +18,17 @@ class EventTickets extends React.Component{
         }
 
 	render(){
-		return(
-			<div className = 'Immediate_Events'>
-			<header className = 'ImmEventsTitle'>
-			   Upcoming Events
-			</header>
-			{this.props.GiveMeImmEvents.map((event) => {
-			   <div class = 'EventBlock'>	
-				<span className = 'EventTitle'>event.title</span>
-				{event.performers.map((entertainer) => {
-					<span className = 'ArtistName' onClick = (){if (this.state.artist !== entertainer.name){this.props.EventsByArtist(entertainer)}}>
-					entertainer.name
-					</span>
-				});}
-				<span className = 'EventHappenstance'>event.happening</span>
-				<span className = 'EventVenue'>event.venue</span> 
-			   </div>
-			})}
+	        render(
+			<div className='EventOptions'>
+				<div className = 'EventOptionsContainer'>
+					<ImmediateEvents />
+					<SportingEvents />
+					<EventSearchBar />
+				</div>
 			</div>
 		)
-	
 	}
 }
-export default connect(mapStateToProps, {EventsByArtist, GiveMeImmEvents, ParseSportingEvents, for})(EventTickets);
+
+export default connect(mapStateToProps, {EventsByArtist, ParseSportingEvents, queryEvent})(EventTickets);
 

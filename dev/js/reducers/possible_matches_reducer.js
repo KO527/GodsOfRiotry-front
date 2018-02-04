@@ -7,7 +7,7 @@ const INITIAL_PIECES = {contemplated_piece: action.payload.data.contemplated_pie
 			suggestedBottoms: action.payload.data.suggested_bottoms
 			}
 
-export default function(state = INITIAL_STATE, action){
+export default function(state = INITIAL_PIECES, action){
 	
 	switch(action.type){
 		case GET_ANCILLARY_PIECES:
