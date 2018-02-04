@@ -6,6 +6,9 @@
 import {combineReducers} from 'redux';
 import {reducer as formReducer} from 'redux-form';
 import PlaylistReducer from '../playlist_reducer';
+import eventTicketTeducer from '../event_options_reducer';
+import PossibleMatchesReducer from '../possible_matches_reducer';
+ 
 
 const allReducers = combineReducers({
  form: formReducer, 
