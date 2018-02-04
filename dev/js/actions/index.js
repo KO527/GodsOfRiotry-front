@@ -1,5 +1,3 @@
-import {SEARCH_TERM, SPORTING_EVENTS, IMMEDIATE_EVENTS, EVENTS_BY_ARTIST, INITIAL_PLAYLIST, REPLACE_INITIAL_PLAYLIST, INITIAL_PIECES, SET_CONTEMPLATED_PIECE, GET_ANCILLARY_PIECES, ORGANIZE_PIECES};
-
 var SC = require('node-soundcloud'); 
 
 const API_URL = "http://localhost:5000/api/v1";
@@ -10,7 +8,7 @@ export function ParseEventsByArtist(artist){
 
 	return {
 		type: EVENTS_BY_ARTIST,
-		payload: request
+		payload: request["events"]
 	}
 }
 
@@ -19,7 +17,7 @@ export function ParseEventsByTeam(team){
 
 	return {
 		type: EVENTS_BY_TEAM,
-		payload: request
+		payload: request["events"]
 	}
 }
 
@@ -28,7 +26,7 @@ export function GiveMeImmEvents(){
 
 	return {
 		type: IMMEDIATE_EVENTS,
-		payload: request
+		payload: request["events"]
 	}
 }
 
@@ -37,7 +35,7 @@ export function ParseSportingEvents(){
 	
 	return {
 		type: SPORTING_EVENTS,
-		payload: request
+		payload: request["events"]
 	}
 }
 
@@ -46,7 +44,7 @@ export function queryEvent(term){
 	
 	return {
 		type: SEARCH_TERM,
-		payload: request
+		payload: request["events"]
 	}
 }
 
