@@ -4,6 +4,11 @@ var SC = require('node-soundcloud');
 
 export default class Playlist extends Component {
   
+  constructor(props){
+	super(props);
+ 	
+	this.onInputChange = this.onInputChange.bind(this); 	
+  }  
   
   componentDidMount(){
 	SC.initialize({
@@ -18,35 +23,35 @@ export default class Playlist extends Component {
 
   var connect = "<img src = '../../images/btn-connect-m.png'>";
   var disconnect = "<img src = '../../images/btn-disconnect-m.png'>";
-  
+
+  //need to discern between whether object entered into searchForQueries is a track or playlist
+ 
   componentWillReceiveProps(nextProps){
-	if (this.props.term.playlistTitle !== nextProps.term.playlistTitle){
+	if (this.props.playlistTitle !== nextProps.playlistTitle){
 	  	this.getPlaylist();
 	}
 	else{
-	   this.props.term.tracks.map((track) => function(track){
-	     if (!nextProps.term.tracks.include(track)){
-		this.getPlaylist();
+	   this.props.tracks.map((track) => function(track){
+	     if (!this.props.tracks.include(nextProps.track)){
+		this.props.addTracks(nextProps);
 	     }
 	   }	
 	}
    }
 		
-		
+ 		
 	 
   connect(){
 	
-	SC.connect().then(function(){
-		return SC.get('/me');
-	}).then(function(me){
-		document.getElementsByClassName("connect_disconnect_container").innerHtml = disconnect;
-		this.importPlaylist();
-		return true;
-	}).catch(function(reason){
-		alert(reason);
+	if (SC.isConnected() && document.getElementsByClassName('connect_disconnect_container').innerHtml == disconnect){
 		return false;
-	};
+	}
+	else if (SC.isConnected() && document.getElementsByClassName('connect_disconnect_container').innerHtml == connect){
+		return false;
+	}
   }
+
+  SC.connect().then(function(){SC.get('/me');}).then(function(me){})
  
   disconnect(){
 	document.getElementsByClassName('media_play').innerHtml = "";
@@ -61,31 +66,26 @@ export default class Playlist extends Component {
   
   getPlaylist(){
 	document.getElementByClassName('media_play').innerHtml = '';
-	return SC.get('me/${this.props.term.playlistTitle}').then(function(playlist){
-		SC.oEmbed(playlist, element: document.getElementByClassname('media_play'));
-	}
+	SC.get('me/${this.props.term.playlistTitle}').then(function(playlist){
+		SC.oEmbed(playlist, element: document.getElementByClassname('media_play')).then(function(){ document.getElementsByClassName("connect_disconnect_container").innerHtml = disconnect;
+		}());
+   	}
   }
 
   importPlaylist(){
-	this.props.term.playlistTitle = prompt('Which playlist do you wish to import?', 'Playlist Name:', 'Name:');
+	this.props.term.playlistTitle = prompt('Which playlist do you wish to import?', 'Playlist Name');
 	
-	this.getPlaylist().then(function(playlist){
-		SC.oEmbed(playlist, element: document.getElementByClassName('media_play'));
-	});
+	this.getPlaylist();
   }
   
   render(){
       return(
            <div className="PlaylistLayout">
                <header className= "media">
-        	  <div className "search-bar">
-			<input value = {this.state.term} onChange={event => this.onInputChange(event.target.value)} />
-                  </div>
-	          <nav>
-		     <li className="media_play">
-               
+                 <nav>
+		     <li className="media_play">              
 		     </li>
-		     <Link to = {connect() ? this.disconnect() : this.connect() } className = "connect_disconnect_container">
+		     <Link to = {connect() ? this.importPlaylist() : this.disconnect()} className = "connect_disconnect_container">
 		     </Link>
                   </nav>
                </header>
