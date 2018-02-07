@@ -11,11 +11,6 @@ export default class Playlist extends Component {
   }  
   
   componentDidMount(){
-	SC.initialize({
-            client_id: ENV["SOUNDCLOUD_CLIENT_ID"],
-            redirect_uri: "http://godsofriotry.com/playlist" 
-        });
-
         this.props.getInitialPlaylist().then(function(playlist){
 		SC.oEmbed(playlist, element: document.getElementByClassName('media_play'));
         });
@@ -35,7 +30,7 @@ export default class Playlist extends Component {
 	     if (!this.props.tracks.include(nextProps.track)){
 		this.props.addTracks(nextProps);
 	     }
-	   }	
+	   }());	
 	}
    }
 		
@@ -50,8 +45,6 @@ export default class Playlist extends Component {
 		return false;
 	}
   }
-
-  SC.connect().then(function(){SC.get('/me');}).then(function(me){})
  
   disconnect(){
 	document.getElementsByClassName('media_play').innerHtml = "";

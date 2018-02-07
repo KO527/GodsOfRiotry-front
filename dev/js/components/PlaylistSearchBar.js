@@ -2,14 +2,30 @@ class PlaylistSearchBar extends Component{
 
 	constuctor(props){
 	
+		
 		super(props);
+		
 		this.state = {
 		    term: {
 			playlistTitle: '',
-			tracks: []
-	            }
+			trackTitle: '',
+			tracks: [],
+			playlists: [] 
+		   }
          	};
 	}
+	
+	componentDidMount(){
+            SC.initialize({
+            	client_id: ENV["SOUNDCLOUD_CLIENT_ID"],
+            	redirect_uri: "http://godsofriotry.com/playlist"
+            });
+	    SC.connect(function(){
+		SC.get('/me', function(response){
+			this.setState(tracks: "http://soundcloud.com/" + response.permalink + '/tracks', playlists: "http://soundcloud.com/" + response.permalink + '/sets');});
+	    });	
+	}
+	
 
 	searchForQueries(term){
 		SC.get('/tracks', {
@@ -39,6 +55,7 @@ class PlaylistSearchBar extends Component{
 			header.classList.add('header');
 			header.innerHtml = '<a href = " '+ track.permalink_url + '"target-"_blank">' + track.title + '</a>';
 			
+			
 		 	var button = document.createElement('div');
 			button.classList.add('ui', 'bottom', 'attached', 'button', 'js-button');
 			var icon = document.createElement('i');
@@ -47,6 +64,7 @@ class PlaylistSearchBar extends Component{
 			var buttonText = document.createElement('span');
 			buttonText.innerHtml = 'Add to playlist';
 			
+			content.appendChild(header);
 			button.appendChild('header');
 			button.appendChild(buttonText);
 			button.addEventListener('click', function(){
@@ -61,23 +79,31 @@ class PlaylistSearchBar extends Component{
 			
 			searchResults.appendChld(card);
 		});
-}
-	       
-        onInputChange(term){
-		this.searchForQueries(term);
+	}		
+	
+        getEmbed(trackUrl){
+			SC.oEmbed(trackUrl, {autoplay: false}, {maxHeight: 10%}).then(function(embed){
+				var mediaPlay = document.querySelector('media-play');
+				var box = document.createElement('div');
+				box.innerHtml = embed.html;
+				mediaPlay.insertBefore(box, mediaPlay.firstChild);
+				sessionStorage.setItem('key', mediaPlay.innerHtml);
+				this.setState({tracks: box, playlist});
+			});
 	}
 
+     
 	document.querySelector(".search").addEventListener('click', function() {
  		 input = document.querySelector("input").value;
-  		 SoundCloudAPI.getTrack(input);
+  		 this.searchForQueries(input);
         });
-
+        
 	document.querySelector(".input-search").addEventListener('keyup', function(e) {
 
-  		var input = document.querySelector("input").value;
+  		var input = document.querySelector(".input-search").value;
 
   		if (e.which === 13) {
-    			SoundCloudAPI.getTrack(input);
+    			this.searchForQueries(input);
   		}
 	});
  
@@ -89,11 +115,19 @@ class PlaylistSearchBar extends Component{
                 const TrackPlaylistSearch = _.debounce((term) => {this.searchForQueries(term)}, 300);        
 
 		return(
-			<div className = "search_bar">
-			    <input onChange = { event => this.onInputChange(event.target.value)}/>
-			</div>	
+			<div class="main">
+        			<div class="ui massive icon input">
+          				<input type="text" placeholder="Search for a song or artist..." class="js-search input-search">
+          				<i class="search icon js-submit"></i>
+        			</div>
+        			<button onclick="localStorageClear();" class="clear">Clear Playlist</button>
+			</div>
+
+			<div class="search-results js-search-results ui cards">
+
+		        </div>
 		);
-		<Playlist playlistTitle = {this.state.term.playlistTitle} tracks = {this.state.term.tracks} addTracks = {setupTracks}/>
+		<Playlist playlistTitle = {this.state.term.playlistTitle} tracks = {this.state.term.tracks} playlists = {this.state.term.playlists}/>
 	}
 
 }
