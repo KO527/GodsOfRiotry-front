@@ -19,14 +19,17 @@ class PlaylistSearchBar extends Component{
             SC.initialize({
             	client_id: ENV["SOUNDCLOUD_CLIENT_ID"],
             	redirect_uri: "http://godsofriotry.com/playlist"
-            });
-	    SC.connect(function(){
-		SC.get('/me', function(response){
-			this.setState(tracks: "http://soundcloud.com/" + response.permalink + '/tracks', playlists: "http://soundcloud.com/" + response.permalink + '/sets');});
-	    });	
+            });    
+	
 	}
 	
-
+	connect(){
+        	SC.connect(function(){
+             	SC.get('/me', function(response){
+                	this.setState(term.tracks: "http://soundcloud.com/" + response.permalink + '/tracks', term.playlists: "http://soundcloud.com/" + response.permalink + '/sets');});
+        	});
+ 	}
+	
 	searchForQueries(term){
 		SC.get('/tracks', {
 			q: term, license: 'cc-by-sa'
@@ -34,7 +37,11 @@ class PlaylistSearchBar extends Component{
 		       this.layoutTracks(tracks);
                 });
 	}
-	
+	var localStorageClear = function() {
+  		window.localStorage.clear();
+  		document.location.reload(true);
+	};
+
 	layoutTracks(tracks){
 		tracks.forEach(function(track){
 			var card = document.createElement('div');
@@ -88,7 +95,7 @@ class PlaylistSearchBar extends Component{
 				box.innerHtml = embed.html;
 				mediaPlay.insertBefore(box, mediaPlay.firstChild);
 				sessionStorage.setItem('key', mediaPlay.innerHtml);
-				this.setState({tracks: box, playlist});
+				this.setState({...tracks, [track: embed]});
 			});
 	}
 
@@ -106,14 +113,8 @@ class PlaylistSearchBar extends Component{
     			this.searchForQueries(input);
   		}
 	});
- 
-        setupTracks(newTracks){
-		this.setState({tracks: [...this.state.term.tracks, newTracks]);
-	}
-
+	
 	render(){
-                const TrackPlaylistSearch = _.debounce((term) => {this.searchForQueries(term)}, 300);        
-
 		return(
 			<div class="main">
         			<div class="ui massive icon input">
@@ -127,8 +128,7 @@ class PlaylistSearchBar extends Component{
 
 		        </div>
 		);
-		<Playlist playlistTitle = {this.state.term.playlistTitle} tracks = {this.state.term.tracks} playlists = {this.state.term.playlists}/>
+		<Playlist embedItems = {this.getEmbed} connect = {this.connect()}  playlistTitle = {this.state.term.playlistTitle} tracksAndPlaylists = (tracks, playlists) => {this.setState{(term.tracks: tracks, term.playlists: playlists}} />
 	}
-
 }
 

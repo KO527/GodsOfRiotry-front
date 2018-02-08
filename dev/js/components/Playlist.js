@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Link from 'link-react';
+
 var SC = require('node-soundcloud');
+
 
 export default class Playlist extends Component {
   
@@ -11,16 +14,25 @@ export default class Playlist extends Component {
   }  
   
   componentDidMount(){
-        this.props.getInitialPlaylist().then(function(playlist){
-		SC.oEmbed(playlist, element: document.getElementByClassName('media_play'));
-        });
+      	if (!SC.isConnected()){
+		this.props.getInitialPlaylist().then(function(playlist){
+			for(i = 0; i < playlist.length; i++){
+				this.embedItems(playlist[i].permalink_url);
+        		});
+		}
+  	}
+	else {
+		const {id} = this.props.match.params;
+        	this.props.replacePlaylist(id);
+		SC.get('/me', function(response){
+			this.props.tracksAndPlaylists("http://soundcloud.com/" + response.permalink + "/tracks", this.props.playlists("http://soundcloud.com/" + response.permalink + '/sets');}); 
+        }
   }
 
   var connect = "<img src = '../../images/btn-connect-m.png'>";
   var disconnect = "<img src = '../../images/btn-disconnect-m.png'>";
 
-  //need to discern between whether object entered into searchForQueries is a track or playlist
- 
+
   componentWillReceiveProps(nextProps){
 	if (this.props.playlistTitle !== nextProps.playlistTitle){
 	  	this.getPlaylist();
@@ -34,60 +46,58 @@ export default class Playlist extends Component {
 	}
    }
 		
- 		
-	 
-  connect(){
-	
-	if (SC.isConnected() && document.getElementsByClassName('connect_disconnect_container').innerHtml == disconnect){
-		return false;
-	}
-	else if (SC.isConnected() && document.getElementsByClassName('connect_disconnect_container').innerHtml == connect){
-		return false;
-	}
-  }
- 
+ 	
   disconnect(){
 	document.getElementsByClassName('media_play').innerHtml = "";
-	const {id} = this.props.match.params;
-	this.props.replacePlaylist(id);
-	this.props.getInitialPlaylist().then(function(playlist){
-         SC.oEmbed(playlist, element: document.getElementByClassName('media_play'));
-        }).then(function(){
+        this.props.getInitialPlaylist().then(function(playlist){
+          for(i=0; i < playlist.length; i++){
+		this.props.embedItems(playlist[i]);
+	  }
+	}).then(function(){
 	    document.getElementsByClassName("connect_disconnect_container").innerHtml = connect;
 	});
   }
+ 
+  document.querySelector('.connect_disconnect_container').addEventListener('click', function(){
+	var link = document.querySelector('connect_disconnect_container');
+	if (link.innerHtml == disconnect){
+		disconnect();
+	}
+	else if (link.innerHtml == connect){
+		connect();
+	} else {
+		return;
+	}
+ } 
   
-  getPlaylist(){
-	document.getElementByClassName('media_play').innerHtml = '';
-	SC.get('me/${this.props.term.playlistTitle}').then(function(playlist){
-		SC.oEmbed(playlist, element: document.getElementByClassname('media_play')).then(function(){ document.getElementsByClassName("connect_disconnect_container").innerHtml = disconnect;
-		}());
-   	}
+  embedSongs(playlist){
+      document.querySelector('ul.ListOfPlaylists').innerHtml = ' ';
+      for(i = 0; i < playlist.length; i++){
+	this.props.embedItems(playlist[i]);	
+      }
   }
 
-  importPlaylist(){
-	this.props.term.playlistTitle = prompt('Which playlist do you wish to import?', 'Playlist Name');
-	
-	this.getPlaylist();
-  }
-  
   render(){
       return(
            <div className="PlaylistLayout">
                <header className= "media">
-                 <nav>
-		     <li className="media_play">              
-		     </li>
-		     <Link to = {connect() ? this.importPlaylist() : this.disconnect()} className = "connect_disconnect_container">
-		     </Link>
-                  </nav>
                </header>
-	   </div>
-      );
+	       <ul className = "media_play">
+	      
+	       </ul>
+	       <Link className = "connect_disconnect_container">
+               </Link>
+	       <ul class = "ListOfPlayLists">
+		{this.props.playlists.forEach(playlist){
+			PlaylistList = document.querySelector("ul.ListOfPlaylists");
+			PlaylistList.append('<li ref={playlist => this.preferredPlaylist = playlist} onClick = {this.embedSongs(this.preferredPlaylist)} className = 'playlistItem'>' + playlist.title + '</li>');	 	
+		}();}
+	       </ul>
+	    </div>
+	)
   }
-		
 }
-
+  
 function mapStateToProps(state){
 	return {playlist: state.playlist}
 }
