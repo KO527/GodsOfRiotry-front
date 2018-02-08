@@ -1,3 +1,5 @@
+import keydown, { keyScoped } from 'react-keydown';
+
 class UpperComponent extends React.Component{
 	constructor(){
 		super(props);

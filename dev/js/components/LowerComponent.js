@@ -1,3 +1,5 @@
+import keydown, {keyScoped} from 'react-keydown';
+
 class LowerComponent extends React.Component{
 
 	constructor(props){

@@ -89,4 +89,4 @@ function mapStateToProps(state){
 	};
 }
 
-export default connect(mapStateToProps, {setContemplatedPiece, getInitialPieces, getAncillaryPieces})(PossibleMatches)
+export default connect(mapStateToProps, {setContemplatedPiece, getInitialPieces, getAncillaryPieces, organizePieces})(PossibleMatches)
