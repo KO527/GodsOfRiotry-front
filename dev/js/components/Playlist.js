@@ -25,33 +25,20 @@ export default class Playlist extends Component {
 		const {id} = this.props.match.params;
         	this.props.replacePlaylist(id);
 		SC.get('/me', function(response){
-			this.props.tracksAndPlaylists("http://soundcloud.com/" + response.permalink + "/tracks", this.props.playlists("http://soundcloud.com/" + response.permalink + '/sets');}); 
+			this.props.tracksAndPlaylists("http://soundcloud.com/" + response.permalink + "/tracks", "http://soundcloud.com/" + response.permalink + '/sets');}); 
         }
   }
 
   var connect = "<img src = '../../images/btn-connect-m.png'>";
   var disconnect = "<img src = '../../images/btn-disconnect-m.png'>";
 
-
-  componentWillReceiveProps(nextProps){
-	if (this.props.playlistTitle !== nextProps.playlistTitle){
-	  	this.getPlaylist();
-	}
-	else{
-	   this.props.tracks.map((track) => function(track){
-	     if (!this.props.tracks.include(nextProps.track)){
-		this.props.addTracks(nextProps);
-	     }
-	   }());	
-	}
-   }
 		
  	
   disconnect(){
 	document.getElementsByClassName('media_play').innerHtml = "";
         this.props.getInitialPlaylist().then(function(playlist){
           for(i=0; i < playlist.length; i++){
-		this.props.embedItems(playlist[i]);
+		this.props.embedItems(playlist[i].permalink_url);
 	  }
 	}).then(function(){
 	    document.getElementsByClassName("connect_disconnect_container").innerHtml = connect;
@@ -64,14 +51,15 @@ export default class Playlist extends Component {
 		disconnect();
 	}
 	else if (link.innerHtml == connect){
-		connect();
+		this.props.connect();
 	} else {
 		return;
 	}
- } 
+  } 
   
-  embedSongs(playlist){
+  embedSongs(playlist){ 
       document.querySelector('ul.ListOfPlaylists').innerHtml = ' ';
+      this.props.setTracksToNil();
       for(i = 0; i < playlist.length; i++){
 	this.props.embedItems(playlist[i]);	
       }

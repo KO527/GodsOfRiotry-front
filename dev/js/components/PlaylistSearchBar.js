@@ -1,14 +1,10 @@
 class PlaylistSearchBar extends Component{
 
 	constuctor(props){
-	
-		
 		super(props);
 		
 		this.state = {
 		    term: {
-			playlistTitle: '',
-			trackTitle: '',
 			tracks: [],
 			playlists: [] 
 		   }
@@ -37,6 +33,7 @@ class PlaylistSearchBar extends Component{
 		       this.layoutTracks(tracks);
                 });
 	}
+
 	var localStorageClear = function() {
   		window.localStorage.clear();
   		document.location.reload(true);
@@ -128,7 +125,7 @@ class PlaylistSearchBar extends Component{
 
 		        </div>
 		);
-		<Playlist embedItems = {this.getEmbed} connect = {this.connect()}  playlistTitle = {this.state.term.playlistTitle} tracksAndPlaylists = (tracks, playlists) => {this.setState{(term.tracks: tracks, term.playlists: playlists}} />
+		<Playlist playlists = {this.state.term.playlists} setTracksToNil = {this.setState({tracks; []});} embedItems = {this.getEmbed} connect = {this.connect()} tracksAndPlaylists = (tracks, playlists) => {this.setState{(term.tracks: tracks, term.playlists: playlists}} />
 	}
 }
 
