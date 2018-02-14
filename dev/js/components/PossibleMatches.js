@@ -52,10 +52,10 @@ class PossibleMatches extends React.Component{
 	
 	switchFocus(){
 		if (this.state.currentUpperComponent.hasFocus()){
-		 	this.currentLowerComponent.focus();
+		 	this.state.currentLowerComponent.focus();
 		}
 		else if(this.state.currentLowerComponent.hasFocus())		
-			this.currentUpperComponent.focus();	
+			this.state.currentUpperComponent.focus();	
 		}
 		else 
 		  break;
@@ -63,8 +63,9 @@ class PossibleMatches extends React.Component{
 
 	render(){
 		 return(
-		       <Wardrobe upperComponent={this.state.currentUpperComponent} lowerComponent={this.state.currentLowerComponent} currentComponent = {this.state.currentComponent} />
+		       <Wardrobe upperComponent={this.state.currentUpperComponent} lowerComponent={this.state.currentLowerComponent} currentComponent = {this.state.currentComponent} enableCapture={snapshot => this.snapshotMatch = snapshot} />
 	               <div className = "PossibleMatches_Container">
+			    <i class = 'captureOutfit' onClick = {this.snapshotMatch}></i> 
 		            {UpperComponents.map(function(topPiece){  
 				  <UpperComponent key={topPiece.id} id={topPiece.id} ref={(piece)=>{this.setState({currentUpperComponent: piece})}} setCurrentComponent = {(piece) => this.setState(currentComponent.whichPiece: piece, whichComponent: 'u', lowerComponent: null, upperComponent: null)}  toggleToPiece={this.setState({currentLowerComponent: this.props.suggestedBottoms[0]}).then(function(){if (this.state.LowerComponentEnabled: false){this.setState(LowerComponentEnabled: true)}else{break;}})} image={topPiece.image} isLowerComponentEnabled={this.state.LowerComponentEnabled} switchComponent={this.switchFocus} evaluatePiece={isOppositeComponentSuggested} className={if (this.state.currentComponent.whichComponent == 'l'){'standalonePiece'}else if(this.state.currentComponent.whichComponent == 'l'){'PossibleMatchCollapse'} else{'UpperComponent_Container'}}/>
 			        });}>
