@@ -101,4 +101,41 @@ export function organizePieces(){
 		payload: request
 	};
 }
-  
+
+export function EstablishBasicInfo(){
+	const request = axios.post('${API_URL}/users/basic_info_params')
+
+	return (
+		type: ESTABLISH_BASIC_INFO,
+		payload: request
+	)
+}
+
+export function EstablishGender(){
+	const request = axios.post('${API_URL}/users/gender_paramms');
+
+	return (
+		type: ESTABLISH_GENDER,
+		payload: request
+	)
+}
+
+export function EstablishContactInfo(){
+	const request = axios.post('${API_URL}/users/contact_info_params');
+
+	return (
+		type: CONTACT_INFO,
+		payload: request
+	)
+}
+
+export function ReturnUser(){
+	const request = axios.get('${API_URL}/users/show');
+
+	return (
+		type: SHOW_USER,
+		payload: request
+	)
+}
+
+
