@@ -66,7 +66,7 @@ class LowerComponent extends React.Component{
                                 i=curr.indexOf(this.props.LowerComponents);
                                 j = i;
 			        i++;
-                                TweenMax.fromTo(LowerComponents[j], 0.3, {x: 0, opacity: 1}, {x: -250, opacity: 1});
+                                TweenMax.fromTo(LowerComponents[j], 0.3, {x: 0, opacity: 1}, {x: -250, opacity: 0});
 			        TweenMax.fromTo(LowerComponents[i], 0.2, {x: 250, opacity: 0}, {x: 0, opacity: 1, onComplete: callback});}}/>
 		  
 		   <TransitionGroup>
