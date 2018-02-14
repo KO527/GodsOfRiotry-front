@@ -2,8 +2,8 @@
 
 const EachMatch = props => (
 	<div>
-         <i class="icon-destroy-link" onClick={this.removeMatch(props.id)}>
-                   {if (props.currentComponent){
+         <i class="icon-destroy-link" onClick={this.removeMatch(props.id)}></i> 
+	          {if (props.currentComponent){
                         <span class = 'wardrobeStandalonePiece'>
                               {props.currentComponent.image}
                         </span>
@@ -23,36 +23,55 @@ class Wardrobe extends React.Component{
 	constructor(){
 	    super(props);
 	    const wardrobeCounter = 0; 
-	    
+	    const date = new Date();
+
 	    this.state = {
-		  PossibleMatches: [{id: wardrobeCounter, upperComponent: null, lowerComponent: null, standaloneComponent: null }];
-	          this.removeMatch = this.removeMatch.bind(this),
-	          wardrobeCounter: wardrobeCounter	
-	    }
+		  PossibleMatches: [{id: wardrobeCounter, createdAt: date, upperComponent: null, lowerComponent: null, standaloneComponent: null }];
+ 	         wardrobeCounter: wardrobeCounter	
+	    }    
+	    this.removeMatch = this.removeMatch.bind(this);
 	}
-	   
-   	    	    
+   
+	
+	componentDidMount(){
+		this.props.enableCapture(this.capture);		
+	}   
+	
+
+	shouldComponentUpdate(nextProps, nextState){
+		for (i = 0; i < this.state.PossibleMatches; i++){
+			if (nextState.PossibleMatches[nextState.PossibleMatches.length - 1] !== this.state.PossibleMatches[i]){
+				continue;
+			}else if (nextState.PossibleMatches[nextState.PossibleMatches.length - 1] == this.statePossibleMatches[i]){
+				return false;
+			}
+			else{
+				return true;
+			}
+		}
+	}
 
         capture(){
            const nextId = this.state.wardrobeCounter + 1;
 	   if (this.props.currentComponent){
-		this.setState({PossibleMatches: {...this.state.PossibleMatches, id: nextId, standaloneComponent: this.props.currentComponent}, wardrobeCounter: nextId});
+		this.setState({PossibleMatches: [...this.state.PossibleMatches, {id: nextId, standaloneComponent: this.props.currentComponent}], wardrobeCounter: nextId});
+	  	localStorage.setItem(this.state.possibleMatches[this.state.possibleMatches.length - 1].id, this.state.possibleMatches[this.state.possibleMatches.length - 1]);		
 	   }
 	   else if (this.props.lowerComponent && this.props.upperComponent){
-	      this.setState({PossibleMatches: {...this.state.PossibleMatches, id: nextId, upperComponent: this.props.upperComponent, lowerComponent: this.props.lowerComponent}, wardrobeCounter: nextId});
+	      this.setState({PossibleMatches: [...this.state.PossibleMatches, {id: nextId, upperComponent: this.props.upperComponent, lowerComponent: this.props.lowerComponent}], wardrobeCounter: nextId});
+	      localStorage.setItem(this.state.possibleMatches[this.state.possibleMatches.length - 1].id, this.state.possibleMatches[this.state.possibleMatches.length - 1]);
 	   }
 	   else{
 	     break;    	    
 	   }
 	}
-	
 	removeMatch(index){
 	    var PM = this.state.PossibleMatches;
 	    var particularItem;
 	    var particularIndex;
 	    
 	    for(k=0; k<PM.length; k++){
-		if(PM[i].id === index){
+		if(PM[k].id === index){
 			particularItem = PM[k];
 		}
 	    }
@@ -60,16 +79,17 @@ class Wardrobe extends React.Component{
 	    var particularIndex = PM.indexOf(particularItem);
 	    if (PM[particularIndex] !== PM[PM.length - 1]){
 		const newList = PM.filter(listItem => listItem.id !== index;)   
-	    
 	    	for(k=particularIndex; k < PM.length; k++){
 	    		if (PM[k].id === index){
-				newList[k].id = newList[k].id - 1;	
+			    newList[k].id = newList[k].id - 1;
+		            localStorage.setItem(newList[k].id, newList[k]);	
 			}	
   	    	}
-            	this.setState({PossibleMatches: newList, toDoCounter: newList.length});
+            	this.setState({PossibleMatches: newList, wardrobeCounter: newList.length});
 	    }
 	    else if (PM[particularIndex] === PM[PM.length - 1]){
 		PM.slice(particularIndex, 1);
+		localStorage.removeItem(PM[particularIndex].id);
 		this.setState({PossibleMatches: PM, wardrobeCounter: PM.length});
 	    }
 	    else {
@@ -78,12 +98,6 @@ class Wardrobe extends React.Component{
 	}
 
 
-	// Snap action
-	// A prop method that will have its functionality implemented on the right side to 
-	// "capture photos", but will be javascript influenced css of the DOM and will operate
-	// for intentions to place photos on the left side.
-	// in the wardrobe subclass section of the PossibleMatches component.
-	
 	// Adding PossibleMatches and scrolling ability to Wardrobe component subclass 
         // refer to https://css-tricks.com/debouncing-throttling-explained-examples/ to make sure wardrobe
         // design is functionally fit to take care of any desired addtional pieces.      
@@ -92,8 +106,13 @@ class Wardrobe extends React.Component{
 	render(){
 		return(
 		      <div className = 'Wardrobe'>
-		           {this.state.PossibleMatches.map((preference, index) => (
-         			<EachMatch key={preference.id} {...preference} />                                          ))}
+		         <ReactTransitionGroup transitionName = "EachMatch" transitionEnterTimeout = {300} transitionLeaveTimeout = {300} 
+			 {this.state.PossibleMatches.map((preference, index) => (
+         			return (
+					<EachMatch key={preference.createdAt} {...preference} />
+				);
+			 ))}
+			 </ReactTransitionGroup>
 		      </div>
 		);
 	}
