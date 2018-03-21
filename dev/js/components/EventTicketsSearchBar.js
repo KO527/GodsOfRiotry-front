@@ -14,14 +14,16 @@ class EventSearchBar extends React.Component{
 
 	render(){
 		return(
-			<form onSubmit={this.onFormSubmit} className='EventSearch'>
-			<span className="EventSearch-btn-container">
-				<button type="submit" className="EventSearch-btn">
-				Search
-				</button>
-			</span>
-			</form>
-			<EventQueries query={this.state.q} />
+			<div>
+				<form onSubmit={this.onFormSubmit} className='EventSearch'>
+					<span className="EventSearch-btn-container">
+						<button type="submit" className="EventSearch-btn">
+							Search
+						</button>
+					</span>
+				</form>
+				<EventQueries query={this.state.q} />
+			</div>
 		)
 	}
 }

@@ -4,7 +4,7 @@ class EventTickets extends React.Component{
 		this.state = {
 			artist: null			
 		}
-	        this.event_forecast = (){
+	        this.current_date = (){
 	      	  var date = new Date();
 	      	  return date;
 	        }();
@@ -21,8 +21,8 @@ class EventTickets extends React.Component{
 	        render(
 			<div className='EventOptions'>
 				<div className = 'EventOptionsContainer'>
-					<ImmediateEvents />
-					<SportingEvents />
+					<ImmediateEvents currDate = {this.current_date} eventForecast = {this.until_eight_months} />
+					<SportingEvents currDate = {this.current_date} eventForecast = {this.until_eight_months}/>
 					<EventSearchBar />
 				</div>
 			</div>
