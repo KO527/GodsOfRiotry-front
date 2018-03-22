@@ -21,7 +21,7 @@ export default function(state = INITIAL_PIECES, action){
 		case ORGANIZE_PIECES:
 		   return {...state, UpperComponents: action.payload.data.UpperComponents,
 				     LowerComponents: action.payload.data.LowerComponents	     
-			}
+				  }
 		case SET_CONTEMPLATED_PIECE:
 		   return {...state, contemplated_piece: action.payload.data.contemplated_piece}
 		default:
