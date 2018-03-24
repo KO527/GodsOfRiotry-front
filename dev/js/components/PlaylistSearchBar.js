@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import SC from 'soundcloud';
 
 class PlaylistSearchBar extends Component{
@@ -133,3 +134,6 @@ function mapStateToProps(state){
 		tracks
 	}
 }
+
+
+export default connect(mapStateToProps)(PlaylistSearchBar);

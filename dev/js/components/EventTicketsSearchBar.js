@@ -1,3 +1,6 @@
+import React, { Component } from 'react';
+import EventQueries from './EventQueries';
+
 class EventSearchBar extends React.Component{
 
 	constructor(){
@@ -28,3 +31,4 @@ class EventSearchBar extends React.Component{
 	}
 }
 
+export default EventSearchBar

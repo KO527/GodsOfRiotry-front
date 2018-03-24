@@ -1,5 +1,8 @@
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 class ImmediateEvents extends React.Component{
-	constructor(){
+	constructor(props){
 		super(props);
 		this.state = {
 			artist: null
@@ -8,7 +11,7 @@ class ImmediateEvents extends React.Component{
 
 	render(){
 
-		const artists = <span className = 'ArtistName' onClick = () => {if (this.state.artist !== entertainer.name){this.props.ParseEventsByArtist(entertainer.name).then(function(){this.setState({artist: entertainer.name})})}else{return;}}>
+		const artists = <span className = 'ArtistName' onClick = () => {if (this.state.artist !== entertainer.name){this.props.ParseEventsByArtist(entertainer.name, this.props.eventForecast).then(function(){this.setState({artist: entertainer.name})})}else{return;}}>
                             entertainer.name
                         </span>;
  
@@ -20,16 +23,7 @@ class ImmediateEvents extends React.Component{
                         {this.props.GiveMeImmEvents.map((event) => {
                                 <div class = 'EventBlock'>
                                     <span className = 'EventTitle'>JSON.parse(event["title"])</span>
-	                                   {if (this.props.artist_events){
-											this.props.artists_events.map((entertainer) => {
-												artists
-											});
-										}
-									    else {
-											event.performers.map((entertainer) => {
-					                                artists
-					                        });
-									    }}	
+	                                   {this.props.artist_events ? this.props.artists_events.map((entertainer) => { artists }) : event.performers.map((entertainer) => { artists })}	
 			                        <span className = 'EventHappenstance'>JSON.parse(event["venue"]["name"])</span>
 			                        <span className = 'EventAddress'>JSON.parse(event["venue"]["address"]), JSON.parse(event["venue"]["extended_address"])</span>                                             
                         		</div>})
@@ -46,4 +40,4 @@ function mapStateToProps(state){
 	}
 }
 
-export default connect(mapStateToProps, {GiveMeImmEvents})(ImmediateEvents);
+export default connect(mapStateToProps, {GiveMeImmEvents, ParseEventsByArtist})(ImmediateEvents);

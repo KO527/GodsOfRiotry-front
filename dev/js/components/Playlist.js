@@ -6,7 +6,7 @@ import Link from 'link-react';
 import SC from 'soundcloud';
 
 
-export default class Playlist extends Component {
+class Playlist extends Component {
   
   constructor(props){
 	super(props);

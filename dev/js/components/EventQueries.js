@@ -1,3 +1,7 @@
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import queryEvent from '../actions/index';
+
 class EventQueries extends React.Component{
 	constructor(props){
 		super(props);

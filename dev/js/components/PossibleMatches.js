@@ -1,7 +1,9 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Wardrobe from './Wardrobe';
 import UpperComponent from './UpperComponent';
 import LowerComponent from './LowerComponent';
+import {setContemplatedPiece, getInitialPieces, getAncillaryPieces, organizePieces} from '../actions/index';
 
 class PossibleMatches extends React.Component{
 	constructor(props){
