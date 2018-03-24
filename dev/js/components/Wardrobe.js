@@ -1,3 +1,4 @@
+import React, { Component } from 'react';
 
 
 const EachMatch = props => (
@@ -114,3 +115,4 @@ class Wardrobe extends React.Component{
 	}
 }
 
+export default Wardrobe
