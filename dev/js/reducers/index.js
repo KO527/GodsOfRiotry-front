@@ -4,17 +4,39 @@
  * Your entire applications state (store) is just whatever gets returned from all your reducers
  * */
 import {combineReducers} from 'redux';
-import {reducer as formReducer} from 'redux-form';
-import PlaylistReducer from '../playlist_reducer';
-import eventTicketTeducer from '../event_options_reducer';
-import PossibleMatchesReducer from '../possible_matches_reducer';
+import { combineForms } from 'react-redux-form';
+import PlaylistReducer from './playlist_reducer';
+import eventTicketReducer from './event_options_reducer';
+import PossibleMatchesReducer from './possible_matches_reducer';
  
 
-const allReducers = combineReducers({
- form: formReducer, 
+const BasicUserInfoState = {
+        firstName: '',
+        lastName: ''
+}
+
+const ContactInfoState = {
+        email: '',
+        password: '',
+        passwordConfirmation: ''
+}
+
+const GenderInfoState = {
+        gender: ''
+}
+
+
+const allReducers = combineReducers({ 
  Playlist: PlaylistReducer,
  eventOptions: eventTicketReducer,
- possibleMatches: PossibleMatchesReducer
+ possibleMatches: PossibleMatchesReducer,
+ deep: combineForms({
+        basicUserInfo: BasicUserInfoState,
+        GenderInfo: GenderInfoState,
+        ContactInfo: ContactInfoState
+       }, 'deep'),
 });
 
+
 export default allReducers;
+ 

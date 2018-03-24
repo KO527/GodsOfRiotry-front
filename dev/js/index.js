@@ -2,7 +2,7 @@ import SC from 'soundcloud';
 import React from 'react';
 import ReactDOM from "react-dom";
 import {Provider} from 'react-redux';
-import {createStore, applyMiddleware} from 'redux';
+import {createStore, applyMiddleware, combineReducers} from 'redux';
 import {syncHistoryWithStore} from 'react-router-redux'
 import {combineForms, createForms} from 'react-redux-form';
 import {BrowserRouter as Router, Route, browserHistory} from 'react-router-dom';
