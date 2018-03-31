@@ -1,19 +1,42 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import SC from 'soundcloud';
+import Playlist from './Playlist';
+import { auth } from '../actions/index';
 
-class PlaylistSearchBar extends Component{
+class PlaylistSearchBar extends React.Component{
 
-	constuctor(){
-		
+	constructor(){
+		super();
+        const initialState = {
+        	 term: {tracks: [], playlists: []}
+        }
+
 		this.state = {
-		    term: {
-				tracks: [],
-				playlists: [] 
-			}
-        };
+		     ...initialState
+	    };
 	}
 	
+	componentDidMount(){
+		
+		document.querySelector(".search").addEventListener('click', function() {
+ 		 input = document.querySelector("input").value;
+  		 this.searchForQueries(input);
+	    });
+        
+		document.querySelector(".input-search").addEventListener('keyup', function(e) {
+
+	  		var input = document.querySelector(".input-search").value;
+
+	  		if (e.which === 13) {
+	    			this.searchForQueries(input);
+	  		}
+		});
+
+	}
+
+
+
 	searchForQueries(term){
 		SC.get('/tracks', {
 			q: term, license: 'cc-by-sa'
@@ -93,35 +116,21 @@ class PlaylistSearchBar extends Component{
 	
 	render(){
 
-		document.querySelector(".search").addEventListener('click', function() {
- 		 input = document.querySelector("input").value;
-  		 this.searchForQueries(input);
-	    });
-        
-		document.querySelector(".input-search").addEventListener('keyup', function(e) {
-
-	  		var input = document.querySelector(".input-search").value;
-
-	  		if (e.which === 13) {
-	    			this.searchForQueries(input);
-	  		}
-		});
-
 
 		return(
 			<div>
-				<div class="main">
-	        			<div class="ui massive icon input">
-	          				<input type="text" placeholder="Search for a song or artist..." class="js-search input-search"/>
-	          				<i class="search icon js-submit"></i>
+				<div className="main">
+	        			<div className="ui massive icon input">
+	          				<input type="text" placeholder="Search for a song or artist..." className="js-search input-search"/>
+	          				<i className="search icon js-submit"></i>
 	        			</div>
-	        			<button onclick="localStorageClear();" class="clear">Clear Playlist</button>
+	        			<button onclick={this.localStorageClear()} className="clear">Clear Playlist</button>
 				</div>
 
-				<div class="search-results js-search-results ui cards">
+				<div className="search-results js-search-results ui cards">
 
 			    </div>
-				<Playlist playlists = {this.state.term.playlists} setTracksToNil = {this.setState({tracks: []})} embedItems = {this.getEmbed}/>
+				<Playlist playlists = {this.state.term.playlists} setTracksToNil = {() => this.setState({tracks: []})} embedItems = {this.getEmbed}/>
 			</div>
 		);
 	}
@@ -136,4 +145,4 @@ function mapStateToProps(state){
 }
 
 
-export default connect(mapStateToProps)(PlaylistSearchBar);
+export default connect(mapStateToProps, {auth})(PlaylistSearchBar);

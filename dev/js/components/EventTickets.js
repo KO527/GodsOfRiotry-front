@@ -18,12 +18,12 @@ class EventTickets extends React.Component{
         }
 
 	render(){
-	        render(
+	    render(
 			<div className='EventOptions'>
 				<div className = 'EventOptionsContainer'>
 					<ImmediateEvents currDate = {this.current_date} eventForecast = {this.until_eight_months} />
 					<SportingEvents currDate = {this.current_date} eventForecast = {this.until_eight_months}/>
-					<EventSearchBar />
+					<EventTicketsSearchBar />
 				</div>
 			</div>
 		)

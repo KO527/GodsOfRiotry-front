@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { actions, Control, Form, Errors } from 'react-redux-form';
 
 class PasswordConfirmation extends React.Component{
 
@@ -27,7 +27,7 @@ class PasswordConfirmation extends React.Component{
 		}	
 	
 		return(
-			<Form id = 'passwordConfirmationInfo' model = "ContactInfoState" onSubmit= {(user) => this.handleSubmit(user)} validators = {{'': PasswordMismatch()}}>
+			<Form id = 'passwordConfirmationInfo' model = "Intro.ContactInfo" onSubmit= {(user) => this.handleSubmit(user)} validators = {{'': PasswordMismatch()}}>
 				<div className = "field">
 					<label> Password Confirmation: </label>
 					<Control.text model = ".passwordConfirmation"
@@ -48,3 +48,5 @@ class PasswordConfirmation extends React.Component{
 	}
 
 }
+
+export default PasswordConfirmation

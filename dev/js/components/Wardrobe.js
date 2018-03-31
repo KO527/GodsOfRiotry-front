@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 const EachMatch = props => (
 	<div>
@@ -105,11 +105,11 @@ class Wardrobe extends React.Component{
 	render(){
 		return(
 		      <div className = 'Wardrobe'>
-		        <ReactTransitionGroup transitionName = "EachMatch" transitionEnterTimeout = {300} transitionLeaveTimeout = {300}>
+		        <ReactCSSTransitionGroup transitionName = "EachMatch" transitionEnterTimeout = {300} transitionLeaveTimeout = {300}>
 					{this.state.PossibleMatches.map((preference, index) => {
 	         			return <EachMatch key={preference.createdAt} {...preference} />
 					})}		
-			 	</ReactTransitionGroup>
+			 	</ReactCSSTransitionGroup>
 		      </div>
 		);
 	}

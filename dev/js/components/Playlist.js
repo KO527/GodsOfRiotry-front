@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { auth } from '../actions/index';
 import Link from 'link-react';
-
 import SC from 'soundcloud';
 
-
-class Playlist extends Component {
+class Playlist extends React.Component {
   
   constructor(props){
 	super(props);
  	
-	this.onInputChange = this.onInputChange.bind(this); 	
+	// this.onInputChange = this.onInputChange.bind(this); 	
   }  
   
   componentDidMount(){
@@ -29,35 +26,34 @@ class Playlist extends Component {
 				this.props.tracksAndPlaylists("http://soundcloud.com/" + response.permalink + "/tracks", "http://soundcloud.com/" + response.permalink + '/sets');
 			}); 
         }
-  }
 
-  var connect = "<img src = '../../images/btn-connect-m.png'>";
-  var disconnect = "<img src = '../../images/btn-disconnect-m.png'>";
+        document.querySelector('.connect_disconnect_container').addEventListener('click', function(){
+			var link = document.querySelector('connect_disconnect_container');
+			if (link.innerHtml === <img src = {require('../../images/btn-disconnect-m.png')}/>){
+				this.disconnect();
+			}
+			else if (link.innerHtml === <img src = {require('../../images/btn-connect-m.png')}/>){
+				// Find a way for user to connect with their own credentials;
+				SC.connect();
+			} else {
+				return;
+			}
+		});
+  }
 
 		
  	
   disconnect(){
-	document.getElementsByClassName('media_play').innerHtml = "";
+		document.getElementsByClassName('media_play').innerHtml = "";
         this.props.getInitialPlaylist().then(function(playlist){
           for(i=0; i < playlist.length; i++){
 			this.props.embedItems(playlist[i].permalink_url);
 	  	  }
-	}).then(function(){
-	    document.getElementsByClassName("connect_disconnect_container").innerHtml = connect;
-	});
+		}).then(function(){
+		    document.getElementsByClassName("connect_disconnect_container").innerHtml = <img src = {require('../../images/btn-connect-m.png')}/>;
+		});
   }
  
-  document.querySelector('.connect_disconnect_container').addEventListener('click', function(){
-	var link = document.querySelector('connect_disconnect_container');
-	if (link.innerHtml == disconnect){
-		disconnect();
-	}
-	else if (link.innerHtml == connect){
-		this.props.connect();
-	} else {
-		return;
-	}
-  }); 
   
   embedSongs(playlist){ 
       document.querySelector('ul.ListOfPlaylists').innerHtml = ' ';
@@ -67,8 +63,8 @@ class Playlist extends Component {
       }
   }
 
-  render(){
-      return(
+  	render(){
+      	return(
 	        <div className="PlaylistLayout">
 	           <header className= "media">
 	           </header>
@@ -78,19 +74,17 @@ class Playlist extends Component {
 		       <Link className = "connect_disconnect_container">
 	           </Link>
 		       <ul class = "ListOfPlayLists">
-				{this.props.playlists.forEach(playlist){
+				{this.props.playlists.map((playlist) => {
 					PlaylistList = document.querySelector("ul.ListOfPlaylists");
-					PlaylistList.append('<li ref={playlist => this.preferredPlaylist = playlist} onClick = {this.embedSongs(this.preferredPlaylist)} className = 'playlistItem'>' + playlist.title + '</li>');	 	
-				}();}
+					PlaylistList.append('<li ref={playlist => this.preferredPlaylist = playlist} onClick = {this.embedSongs(this.preferredPlaylist)} className = "playlistItem">' + playlist.title + '</li>');
+     			})};
 		       </ul>
 		    </div>
 		)
-  }
+  	}
 }
   
-function mapStateToProps(state){
-	return {playlist: state.playlist}
-}
 
-export default connect(mapStateToProps, {auth})(Playlist);
+
+export default Playlist;
 

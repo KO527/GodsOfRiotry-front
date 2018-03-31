@@ -7,7 +7,7 @@ class SportingEvents extends React.Component{
 	}
 	render(){
 
-		const teams = '<span className = 'TeamName' onClick = (){if (this.state.team !== team.name){this.props.ParseEventsByTeam(team.name).then(function(){this.setState({team: team.name})})}else{return;}}>'
+		const teams = '<span className = "TeamName" onClick = (){if (this.state.team !== team.name){this.props.ParseEventsByTeam(team.name).then(function(){this.setState({team: team.name})})}else{return;}}>'
 	
 		return(
 			<div className = "Sporting_Events">
@@ -20,16 +20,16 @@ class SportingEvents extends React.Component{
 					JSON.parse(event["title"])
 				   </span>
 			           {if (this.props.team_events){
-					this.props.team_events.map((team) => {
-						teams		    
-					});
-				     }
-				     else {
-					event.performers.map((team) => {
-					  teams	
-					});
-				     }
-				  }
+							this.props.team_events.map((team) => {
+								teams		    
+							});
+				     	}
+				     	else {
+							event.performers.map((team) => {
+					  			teams	
+							});
+				     	}	
+				  		}
 				  <span className = 'EventHappenstance'>
 					event.happening
 				  </span>

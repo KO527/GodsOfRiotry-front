@@ -3,7 +3,7 @@ import EventQueries from './EventQueries';
 
 class EventSearchBar extends React.Component{
 
-	constructor(){
+	constructor(props){
 		super(props);
 		this.state = {
 			q: ''
