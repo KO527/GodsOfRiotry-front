@@ -18,14 +18,7 @@ export default function(state = INITIAL_PIECES, action){
 		case SET_CONTEMPLATED_PIECE:
 		   return {...state, contemplated_piece: action.payload.data.contemplated_piece}
 		default:
-			return {...state, contemplated_piece: action.payload.data.contemplated_piece,
-						  extraTops: action.payload.data.extra_tops,
-						  extraBottoms: action.payload.data.extra_bottoms,
-						  standaloneTops: action.payload.data.standalone_tops,
-						  standaloneBottoms: action.payload.data.standalone_bottoms,
-				   		  suggestedTops: action.payload.data.suggested_tops,
-						  suggestedBottoms: action.payload.data.suggested_bottoms
-					}
+			return state;
 	}
 }
 

@@ -4,11 +4,11 @@
  * Your entire applications state (store) is just whatever gets returned from all your reducers
  * */
 import {combineReducers} from 'redux';
-import { combineForms } from 'react-redux-form';
+import { combineForms, formReducer } from 'react-redux-form';
 import PlaylistReducer from './playlist_reducer';
 import eventTicketReducer from './event_options_reducer';
 import PossibleMatchesReducer from './possible_matches_reducer';
- 
+import {routerReducer} from 'react-router-redux';
 
 const BasicUserInfoState = {
         firstName: '',
@@ -30,11 +30,13 @@ const allReducers = combineReducers({
  Playlist: PlaylistReducer,
  eventOptions: eventTicketReducer,
  possibleMatches: PossibleMatchesReducer,
- deep: combineForms({
+ Intro: combineForms({
         basicUserInfo: BasicUserInfoState,
         GenderInfo: GenderInfoState,
         ContactInfo: ContactInfoState
-       }, 'deep'),
+       }, 'Intro'),
+ routing: routerReducer,
+ form: formReducer
 });
 
 

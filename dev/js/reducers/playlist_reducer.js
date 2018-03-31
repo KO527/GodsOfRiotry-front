@@ -1,8 +1,9 @@
+import {ME_SET, TRACKS_SET} from '../actions/index';
+
 const initialState = {
 	tracks: [],
 	activeTrack: null
 };
-
 
 export default function(state = initialState, action){
 	switch(action.type){
