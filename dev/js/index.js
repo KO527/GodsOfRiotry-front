@@ -5,7 +5,9 @@ import {Provider} from 'react-redux';
 import {createStore, applyMiddleware, combineReducers} from 'redux';
 import {syncHistoryWithStore} from 'react-router-redux'
 import {combineForms, createForms} from 'react-redux-form';
-import {BrowserRouter as Router, Route, browserHistory} from 'react-router-dom';
+import {Router, Route} from 'react-router-dom';
+import {createBrowserHistory} from 'history';
+import {browserHistory} from 'react-router';
 import thunk from 'redux-thunk';
 import promise from 'redux-promise';
 import createLogger from 'redux-logger';
@@ -22,15 +24,16 @@ const store = createStore(
     applyMiddleware(thunk, promise, logger)
 );
 
-const history = syncHistoryWithStore(browserHistory, store);
+let history = syncHistoryWithStore(createBrowserHistory(), store);
+
 
 ReactDOM.render(
-    <Provider store={store}>
-	    <Router history={history}>
+     <Provider store={store}>
+	     <Router history={history}>
 	        <div>
 	            <Route path="/" component={App}/>
 	        </div>
-	    </Router>
-    </Provider>,
+	     </Router>
+     </Provider>,
     document.getElementById('root')
 );
