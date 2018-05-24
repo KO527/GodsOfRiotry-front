@@ -26,7 +26,7 @@ const GenderInfoState = {
 }
 
 
-const allReducers = combineReducers({ 
+const allReducers = combineReducers({
  Playlist: PlaylistReducer,
  eventOptions: eventTicketReducer,
  possibleMatches: PossibleMatchesReducer,
