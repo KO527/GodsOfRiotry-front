@@ -3,55 +3,9 @@ import SC from 'soundcloud';
 import axios from 'axios';
 import {MYCLIENTID} from '../constants/auth';
 
-const API_URL = "http://localhost:5000/api/v1";
+const API_URL = 'http://localhost:8080/api/v1';
 const SEAT_GEEK_API = "https://api.seatgeek.com";
 
-
-export function auth() {
-  return function (dispatch) {
-    SC.connect().then((session) => {
-      dispatch(fetchMe(session));
-      dispatch(getInitialPlaylist());
-    });
-  };
-};
-
-function fetchMe(session) {
-  return function (dispatch) {
-    fetch(`//api.soundcloud.com/me?oauth_token=${session.oauth_token}`)
-      .then((response) => response.json())
-      .then((data) => {
-        dispatch(setMe(data));
-      });
-  };
-}
-
-function getInitialPlaylist(session){
-	return function(dispatch){
-		fetch(`//api.soundcloud.com/me/activities?limit=20&offset=0&oauth_token=${session.oauth_token}`)
-		.then((response) => response.json())
-		.then((data) => {
-			dispatch(setTracks(data.collection));
-		});
-	}
-};
-
-
-function setMe(state){
- 	const { user } = state;
- 	return { 
- 		type: ME_SET,
- 		payload: user 
- 	};
-}
-
-function setTracks(state){
-	const {tracks} = state;
-	return { 
-		type: TRACKS_SET, 
-		payload: tracks 
-	};
-}
 
 export function ParseEventsByTeam(team, curr_date, event_forecast){
 	const request = axios.get(`${SEAT_GEEK_API}/2/events`, {
@@ -63,7 +17,7 @@ export function ParseEventsByTeam(team, curr_date, event_forecast){
 		}
 	});
 
-	return {
+ 	return {
 		type: EVENTS_BY_TEAM,
 		payload: request["events"]
 	}
@@ -116,7 +70,7 @@ export function ParseSportingEvents(curr_date, event_forecast){
 			geoip: 100
 		}
 	});
-	
+
 	return {
 		type: SPORTING_EVENTS,
 		payload: request["events"]
@@ -129,7 +83,7 @@ export function queryEvent(term){
 			q: term
 		}
 	});
-	
+
 	return {
 		type: SEARCH_TERM,
 		payload: request["events"]
@@ -137,46 +91,94 @@ export function queryEvent(term){
 }
 
 
-export function replaceInitialPlaylist(id){
-	const request = axios.delete(`${API_URL}/playlist/${id}`);
-
-	return {
-	   type: REPLACE_INITIAL_PLAYLIST,
-	   payload: request
-    }
+export function defaultPieces(){
+	return function(dispatch){
+		fetch(`${API_URL}/possible_matches/setup_possible_matches`, {
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			}
+		}).then((res) => res.json())
+		.then((json) => {
+			console.log('Json: ', json);
+			dispatch(getInitialPieces(json))
+		})
+	}
 }
 
-export function getInitialPieces(){
-	const request = axios.get(`${API_URL}/PossibleMatches/show`);
-	
-	return{
+export function getInitialPieces(request){
+	return {
 		type: INITIAL_PIECES,
 		payload: request
 	}
 }
 
-export function setContemplatedPiece(contemplated_piece_id){
-	const request = axios.post(`${API_URL}/VisibleGorClothing/visible_gor_clothing/${contemplated_piece_id}`);
 
+export function setEvaluatedPiece(contemplated_piece_id){
+	return function(dispatch){
+		return fetch(`${API_URL}/possible_matches/${contemplated_piece_id}/visible_gor_clothing`, {
+			method: "POST",
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+        	}
+        })
+        .then(res => res.json())
+        	.then((json) => {
+          		dispatch(setContemplatedPiece(json))
+        	})
+  	}
+}
+
+export function setContemplatedPiece(request){
 	return{ 	
 		type: SET_CONTEMPLATED_PIECE,
 		payload: request
 	};
 }
 
-export function getAncillaryPieces(){
-	const request = axios.get(`${API_URL}/PossibleMatches/show`);
-	
+export function getCorrespondingPieces(){
+	return function(dispatch){
+		return fetch(`${API_URL}/possible_matches/setup_possible_matches`, {
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			}
+		})
+		.then(res => res.json())
+			.then((json) => {
+				dispatch(getAncillaryPieces(json))
+			})
+
+	}
+}
+
+
+export function getAncillaryPieces(request){
 	return{
 		type: GET_ANCILLARY_PIECES,
 		payload: request
 	};
 }
 
-export function organizePieces(){
-	const request = axios.get(`${API_URL}/PossibleMatches/organize_pieces`)
+export function arrangePieces(){
+	return function(dispatch){
+		return fetch(`${API_URL}/possible_matches/organize_pieces`, {
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			}
+		})
+		.then(res => res.json())
+			.then((json) => {
+				console.log('ArrangePiecesJson: ', json);
+				dispatch(organizePieces(json))
+			})
+	}
+}
 
-	return{
+export function organizePieces(request){
+	return {
 		type: ORGANIZE_PIECES,
 		payload: request
 	};
@@ -210,7 +212,7 @@ export function EstablishGender(gender){
 }
 
 export function EstablishContactInfo(email, password, passwordConfirmation){
-	
+
 	const request = axios.post(`${API_URL}/users/basic_info_params/`, {
 		params: {
 			email: `${email}`,
