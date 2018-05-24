@@ -17,7 +17,7 @@ class EventQueries extends Component{
 	                        <header className = 'ImmEventsTitle'>
 	                           Upcoming Events
 	                        </header>
-	                        <div class = 'EventBlock'>
+	                        <div className = 'EventBlock'>
 		                        {this.props.queryEvent(this.props.query).forEach((event) => {
 			                        	return	<div>
 				                                    <span className = 'EventTitle'>JSON.parse(event["title"])</span>

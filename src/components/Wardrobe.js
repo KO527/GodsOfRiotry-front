@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-const EachMatch = props => (
+const EachMatch = props => (	
 	<div>
-         <i class="icon-destroy-link" onClick={this.removeMatch(props.id)}></i> 
+         <i className = "icon-destroy-link" onClick={() => props.removeMatch(props.id)}></i> 
 	          
          		(props.currentComponent.whichPiece) ? return {
-         			    <span class = 'wardrobeStandalonePiece'>
+         			    <span className = 'wardrobeStandalonePiece'>
                               {props.currentComponent.whichPiece.image}
                         </span>
                     } : (props.upperComponent && props.lowerComponent) ? return { 
-                        <span class = 'wardrobeStandalonePiece'>
+                        <span className = 'wardrobeStandalonePiece'>
                               {props.currentComponent.whichPiece.image}
                         </span>
 	           		} : return;
@@ -24,10 +24,10 @@ class Wardrobe extends Component{
 	    const date = new Date();
 
 	    this.state = {
-		  PossibleMatches: [{id: wardrobeCounter, createdAt: date, upperComponent: null, lowerComponent: null, standaloneComponent: null }],
- 	      wardrobeCounter: wardrobeCounter	
+		  PossibleMatches: [{id: wardrobeCounter, createdAt: date, upperComponent: null, lowerComponent: null, standaloneComponent: null}],
+ 	      wardrobeCounter: wardrobeCounter,
+ 	      removeMatch: this.removeMatch.bind(this)
 	    }    
-	    this.removeMatch = this.removeMatch.bind(this);
 	}
    
 	
@@ -40,7 +40,8 @@ class Wardrobe extends Component{
 		for (var i = 0; i < this.state.PossibleMatches; i++){
 			if (nextState.PossibleMatches[nextState.PossibleMatches.length - 1] !== this.state.PossibleMatches[i]){
 				continue;
-		}else if (nextState.PossibleMatches[nextState.PossibleMatches.length - 1] === this.state.PossibleMatches[i]){
+			}
+			else if (nextState.PossibleMatches[nextState.PossibleMatches.length - 1] === this.state.PossibleMatches[i]){
 				return false;
 			}
 			else{
@@ -68,7 +69,7 @@ class Wardrobe extends Component{
 	    var PM = this.state.PossibleMatches;
 	    var particularItem;
 	    var particularIndex;
-	    
+
 	    for(var k=0; k<PM.length; k++){
 			if(PM[k].id === index){
 				particularItem = PM[k];
@@ -107,7 +108,7 @@ class Wardrobe extends Component{
 		      <div className = 'Wardrobe'>
 		        <ReactCSSTransitionGroup transitionName = "EachMatch" transitionEnterTimeout = {300} transitionLeaveTimeout = {300}>
 					{this.state.PossibleMatches.map((preference, index) => {
-	         			return <EachMatch key={preference.createdAt} {...preference} />
+	         			return <EachMatch key={preference.createdAt} {...preference} removeMatch={this.state.removeMatch}/>
 					})}		
 			 	</ReactCSSTransitionGroup>
 		      </div>

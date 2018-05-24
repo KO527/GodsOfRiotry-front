@@ -20,7 +20,7 @@ class UpperComponent extends Component{
 						var piece = this.indexOf(this.props.UpperComponents);
                         if (event.which === 37){
                                 piece--;
-								TweenMax.fromTo(this.props.UpperComponents[piece], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: callback});
+								TweenMax.fromTo(this.props.UpperComponents[piece], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: callback}); //After interval of time, callback will deal with this.props.setCurrentComponent and lift currentComponent state to PossibleMatches Component, where PossibleMatches will setup corresponding pieces
                         		this.props.evaluatePiece(this.props.id) ? this.setState({enabled: false}) : this.props.toggleToPiece();
 						}
                         else if (event.which === 39){

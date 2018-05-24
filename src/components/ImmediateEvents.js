@@ -21,7 +21,7 @@ class ImmediateEvents extends React.Component{
 	                           Upcoming Events
 	                        </header>
 	                        {this.props.GiveMeImmEvents.map((event) => {
-	                                <div class = 'EventBlock'>
+	                                <div className = 'EventBlock'>
 	                                    <span className = 'EventTitle'>JSON.parse(event["title"])</span>
 		                                   {this.props.artist_events ? this.props.artists_events.map((entertainer) => { artists }) : event.performers.map((entertainer) => { artists })}	
 				                        <span className = 'EventHappenstance'>JSON.parse(event["venue"]["name"])</span>
