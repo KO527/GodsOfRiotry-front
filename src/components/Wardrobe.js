@@ -1,21 +1,34 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-const EachMatch = props => (	
-	<div>
-         <i className = "icon-destroy-link" onClick={() => props.removeMatch(props.id)}></i> 
-	          
-         		(props.currentComponent.whichPiece) ? return {
-         			    <span className = 'wardrobeStandalonePiece'>
-                              {props.currentComponent.whichPiece.image}
-                        </span>
-                    } : (props.upperComponent && props.lowerComponent) ? return { 
-                        <span className = 'wardrobeStandalonePiece'>
-                              {props.currentComponent.whichPiece.image}
-                        </span>
+const EachMatch = (props, context) => (	
+	 	    <div>
+	         	<i className = "icon-destroy-link" onClick={() => props.removeMatch(props.id)}></i> 
+		          
+	         		{context.whichPiece} ? return {
+	     			    <span className = 'wardrobeStandalonePiece'>
+	                          {context.whichPiece.image}
+	                    </span>
+	                } : {context.upperComponent && context.lowerComponent} ? return { 
+	                    <span className = 'wardrobeStandalonePiece'>
+	                          {context.whichPiece.image}
+	                    </span>
 	           		} : return;
-	</div>	
+			</div>	
 )
+
+EachMatch.contextTypes = {
+	currentComponent: PropTypes.shape({
+		whichPiece: React.PropTypes.shape({
+			currentUpperComponent: React.PropTypes.object,
+			currentLowerComponent: React.PropTypes.object,
+			whichType: React.PropTypes.string
+		}),
+	}),
+	upperComponent: React.PropTypes.object,
+	lowerComponent: React.PropTypes.object
+};
 
 class Wardrobe extends Component{
 	constructor(props){
@@ -112,7 +125,7 @@ class Wardrobe extends Component{
 					})}		
 			 	</ReactCSSTransitionGroup>
 		      </div>
-		);
+		)
 	}
 }
 

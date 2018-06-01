@@ -17,16 +17,25 @@ class LowerComponent extends Component{
 	@keydownScoped(37, 38, 39)
        
 	componentWillEnter(event, callback){
-               if (document.activeElement === this){
+                if (document.activeElement === this){
                         var piece = this.indexOf(this.props.LowerComponents);
+                        var i;
                         if (event.which === 37){
-                              piece--;
-                              TweenMax.fromTo(this.props.LowerComponents[piece], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: callback});
+                              i = piece;
+                              piece++;
+                              if (piece < 0){
+							  	piece = this.props.LowerComponents.length - 1;
+							  }
+							  TweenMax.fromTo(this.props.LowerComponents[i], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: this.centerPiece(piece)});
 			      			  this.props.evaluatePiece(this.props.id) ? this.setState({enabled: false}) : this.props.toggleToPiece();
 						}
-                        else if (event.which === 39){     
-                              piece++;
-                              TweenMax.fromTo(this.props.LowerComponents[piece], 0.3, {x: 250, opacity: 1}, {x: 0, opacity: 0, onComplete: callback});
+                        else if (event.which === 39){
+                        	  i = piece;
+                        	  piece--
+                              if (piece < 0){
+                              	piece = this.props.LowerComponents[i] - 1;
+                              }
+                              TweenMax.fromTo(this.props.LowerComponents[i], 0.3, {x: 250, opacity: 1}, {x: 0, opacity: 0, onComplete: this.centerPiece(piece)});
 		              		  this.props.evaluatePiece(this.props.id) ? this.setState({enabled: false}) : this.props.toggleToPiece();
 						}
                         else if (event.which === 38){
@@ -41,16 +50,13 @@ class LowerComponent extends Component{
                     return;
                 }
     }
-	
-	//setState functionality in possibleMatches has to happen inside of ComponentWillEnter because setState functionality cannot fire inside of
-	//JSX in render() method. 
-	
-	
+
+		
 	componentWillLeave(event, callback){
 		var piece = this;
 		if (document.activeElement === this){
 			if (event.which === 37){
-				TweenMax.fromTo(piece, 0.2, {x:0, opacity: 1}, {x: 250, opacity: 0, onComplete: callback})
+				TweenMax.fromTo(piece, 0.2, {x: 0, opacity: 1}, {x: 250, opacity: 0, onComplete: callback})
 			}
 			else if (event.which === 39){
 				TweenMax.fromTo(piece, 0.2, {x: 0, opacity: 1}, {x: -250, opacity: 0, onComplete: callback})
@@ -65,12 +71,26 @@ class LowerComponent extends Component{
 	}
 
 
-	
+	centerPiece(i){
+    	newPiece = this.props.LowerComponents[i];
+    	newPiece.props.focusResidingPiece();
+    	 if (this.residingUpperComponent && this.residingLowerComponent){
+    	 	this.props.setNewPiece(newPiece, 'match');
+    	 }
+    	 else if (this.residingUpperComponent && this.residingLowerComponent == null){
+    	 	this.props.setNewPiece(newPiece, 'top');
+    	 }
+    	 else if (this.residingLowerComponent && this.residingUpperComponent == null){
+    	 	this.props.setNewPiece(newPiece, 'bottom');
+    	 }
+    	 else {
+    		return;	 	
+    	 }
+    }	
 
 	render(){
 	
 		const {timeout, enabled} = this.state;		
-
 		return(
 		  	<div>
 		  		<ReactInterval{...[timeout, enabled]} callback={()=>{ var curr=this.state.currentLowerComponent;

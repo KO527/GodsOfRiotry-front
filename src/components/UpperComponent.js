@@ -16,16 +16,16 @@ class UpperComponent extends Component{
 	@keydownScoped(37, 39, 40)
 
 	componentWillEnter(event, callback){
-               if (document.activeElement === this){
+                if (document.activeElement === this){
 						var piece = this.indexOf(this.props.UpperComponents);
                         if (event.which === 37){
                                 piece--;
-								TweenMax.fromTo(this.props.UpperComponents[piece], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: callback}); //After interval of time, callback will deal with this.props.setCurrentComponent and lift currentComponent state to PossibleMatches Component, where PossibleMatches will setup corresponding pieces
+								TweenMax.fromTo(this.props.UpperComponents[piece], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: centerPiece(i)});
                         		this.props.evaluatePiece(this.props.id) ? this.setState({enabled: false}) : this.props.toggleToPiece();
 						}
                         else if (event.which === 39){
                                 piece++;
-                                TweenMax.fromTo(this.props.UpperComponents[piece], 0.3, {x: 250, opacity: 0}, {x: 0, opacity: 1, onComplete: callback});
+                                TweenMax.fromTo(this.props.UpperComponents[piece], 0.3, {x: 250, opacity: 0}, {x: 0, opacity: 1, onComplete: centerPiece(i)});
 	                        	this.props.evalutePiece(this.props.id) ? this.setState({enabled: false}) : this.props.toggleToPiece();
 						}
 						else if (event.which === 40){
@@ -58,7 +58,24 @@ class UpperComponent extends Component{
                     return;
                 }
     }
-	
+  
+    centerPiece(i){
+    	newPiece = this.props.LowerComponents[i];
+    	newPiece.props.focusResidingPiece();
+    	 if (this.residingUpperComponent && this.residingLowerComponent){
+    	 	this.props.setNewPiece(newPiece, 'match');
+    	 }
+    	 else if (this.residingUpperComponent && this.residingLowerComponent == null){
+    	 	this.props.setNewPiece(newPiece, 'top');
+    	 }
+    	 else if (this.residingLowerComponent && this.residingUpperComponent == null){
+    	 	this.props.setNewPiece(newPiece, 'bottom');
+    	 }
+    	 else {
+    		return;	 	
+    	 }
+    }
+
 	render(){
 
 		const {enabled, timeout} = this.state;
