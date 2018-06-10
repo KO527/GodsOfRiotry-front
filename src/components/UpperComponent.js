@@ -20,12 +20,12 @@ class UpperComponent extends Component{
 						var piece = this.indexOf(this.props.UpperComponents);
                         if (event.which === 37){
                                 piece--;
-								TweenMax.fromTo(this.props.UpperComponents[piece], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: centerPiece(i)});
+								TweenMax.fromTo(this.props.UpperComponents[piece], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: this.centerPiece(piece)});
                         		this.props.evaluatePiece(this.props.id) ? this.setState({enabled: false}) : this.props.toggleToPiece();
 						}
                         else if (event.which === 39){
                                 piece++;
-                                TweenMax.fromTo(this.props.UpperComponents[piece], 0.3, {x: 250, opacity: 0}, {x: 0, opacity: 1, onComplete: centerPiece(i)});
+                                TweenMax.fromTo(this.props.UpperComponents[piece], 0.3, {x: 250, opacity: 0}, {x: 0, opacity: 1, onComplete: this.centerPiece(piece)});
 	                        	this.props.evalutePiece(this.props.id) ? this.setState({enabled: false}) : this.props.toggleToPiece();
 						}
 						else if (event.which === 40){
@@ -60,16 +60,16 @@ class UpperComponent extends Component{
     }
   
     centerPiece(i){
-    	newPiece = this.props.LowerComponents[i];
-    	newPiece.props.focusResidingPiece();
+    	  
+    	 this.residingUpperComponent.current.focus();
     	 if (this.residingUpperComponent && this.residingLowerComponent){
-    	 	this.props.setNewPiece(newPiece, 'match');
+    	 	this.props.setCurrentPiece(i, 'match');
     	 }
     	 else if (this.residingUpperComponent && this.residingLowerComponent == null){
-    	 	this.props.setNewPiece(newPiece, 'top');
+    	 	this.props.setCurrentPiece(i, 'top');
     	 }
     	 else if (this.residingLowerComponent && this.residingUpperComponent == null){
-    	 	this.props.setNewPiece(newPiece, 'bottom');
+    	 	this.props.setCurrentPiece(i, 'bottom');
     	 }
     	 else {
     		return;	 	

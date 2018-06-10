@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import EventQueries from './EventQueries';
+import { connect } from 'react-redux';
 
 class EventSearchBar extends Component{
 
@@ -31,4 +32,5 @@ class EventSearchBar extends Component{
 	}
 }
 
-export default EventSearchBar
+
+export default EventSearchBar;

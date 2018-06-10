@@ -6,29 +6,34 @@ const EachMatch = (props, context) => (
 	 	    <div>
 	         	<i className = "icon-destroy-link" onClick={() => props.removeMatch(props.id)}></i> 
 		          
-	         		{context.whichPiece} ? return {
+	         		{context.whichType === 'standalone' && context.currentUpperComponent } ? return {
 	     			    <span className = 'wardrobeStandalonePiece'>
-	                          {context.whichPiece.image}
+	                          {context.currentUpperComponent.image}
 	                    </span>
-	                } : {context.upperComponent && context.lowerComponent} ? return { 
+	                } : {context.whichType === 'standalone' && context.currentLowerComponent} ? return { 
 	                    <span className = 'wardrobeStandalonePiece'>
-	                          {context.whichPiece.image}
+	                          {context.currentLowerComponent.image}
 	                    </span>
+	           		} : {context.whichType === 'match' && context.currentLowerComponent && context.currentUpperComponent} ? return {
+	           			<div className = 'PossibleMatchContainer'>
+		           			<span className = 'wardrobeUpperComponent'>
+		           				{context.currentUpperComponent.image}
+		           			</span>
+		           			<span className = 'wardrobeLowerComponent'>
+		           				{context.currentLowerComponent.image}
+		           			</span>
+		           		</div>
 	           		} : return;
 			</div>	
 )
 
 EachMatch.contextTypes = {
-	currentComponent: PropTypes.shape({
-		whichPiece: React.PropTypes.shape({
-			currentUpperComponent: React.PropTypes.object,
-			currentLowerComponent: React.PropTypes.object,
-			whichType: React.PropTypes.string
-		}),
-	}),
-	upperComponent: React.PropTypes.object,
-	lowerComponent: React.PropTypes.object
+	currentUpperComponent: PropTypes.object,
+	currentLowerComponent: PropTypes.object,
+	whichType: PropTypes.string
 };
+
+
 
 class Wardrobe extends Component{
 	constructor(props){
@@ -37,16 +42,36 @@ class Wardrobe extends Component{
 	    const date = new Date();
 
 	    this.state = {
-		  PossibleMatches: [{id: wardrobeCounter, createdAt: date, upperComponent: null, lowerComponent: null, standaloneComponent: null}],
+		  PossibleMatches: [{id: wardrobeCounter, createdAt: date, upperComponent: this.props.upperComponent, lowerComponent: this.props.lowerComponent, standaloneComponent: null, whichType: null}],
  	      wardrobeCounter: wardrobeCounter,
  	      removeMatch: this.removeMatch.bind(this)
 	    }    
 	}
    
-	
-	componentDidMount(){
-		this.props.enableCapture(this.capture);		
-	}   
+	getChildContext(){
+		const {PossibleMatches} = this.state
+		var PM = PossibleMatches;
+		var lastOne = PM[PM.length - 1];
+		if (lastOne.upperComponent && lastOne.lowerComponent){
+			return {currentUpperComponent: lastOne.upperComponent,
+					currentLowerComponent: lastOne.lowerComponent,
+					whichType: 'match'}
+		}
+		else if (lastOne.upperComponent && lastOne.lowerComponent == null){
+			return {currentUpperComponent: lastOne.standaloneComponent,
+					whichType: 'standalone'}
+		}
+		else if (lastOne.lowerComponent && lastOne.upperComponent == null){
+			return {currentLowerComponent: lastOne.standaloneComponent,
+					whichType: 'standalone'}
+		}
+		else{
+			return;
+		}
+	}
+	// componentDidMount(){
+	// 	this.props.enableCapture(this.capture);		
+	// }   
 	
 
 	shouldComponentUpdate(nextProps, nextState){
@@ -65,13 +90,23 @@ class Wardrobe extends Component{
 
     capture(){
            const nextId = this.state.wardrobeCounter + 1;
-		   if (this.props.currentComponent){
-				this.setState({PossibleMatches: [...this.state.PossibleMatches, {id: nextId, standaloneComponent: this.props.currentComponent}], wardrobeCounter: nextId});
+		   if (this.props.currentUpperComponent && this.props.currentLowerComponent === null){
+				this.setState({PossibleMatches: [...this.state.PossibleMatches, {id: nextId, standaloneComponent: this.props.upperComponent}], wardrobeCounter: nextId}).then(() => {
+					return {currentUpperComponent: this.state.PossibleMatches[this.state.PossibleMatches.length - 1].currentUpperComponent};
+				});
 			  	localStorage.setItem(this.state.possibleMatches[this.state.possibleMatches.length - 1].id, this.state.possibleMatches[this.state.possibleMatches.length - 1]);		
 		   }
-		   else if (this.props.lowerComponent && this.props.upperComponent){
-		      this.setState({PossibleMatches: [...this.state.PossibleMatches, {id: nextId, upperComponent: this.props.upperComponent, lowerComponent: this.props.lowerComponent}], wardrobeCounter: nextId});
+		   else if (this.props.currentLowerComponent && this.props.currentUpperComponent === null){
+		      this.setState({PossibleMatches: [...this.state.PossibleMatches, {id: nextId, standaloneComponent: this.props.lowerComponent}], wardrobeCounter: nextId}).then(() => {
+		      		return {currentLowerComponent: this.state.PossibleMatches[this.state.PossibleMatches.length - 1].currentLowerComponent}
+		      });
 		      localStorage.setItem(this.state.possibleMatches[this.state.possibleMatches.length - 1].id, this.state.possibleMatches[this.state.possibleMatches.length - 1]);
+		   }
+		   else if (this.props.currentLowerComponent & this.props.currentUpperComponent){
+		   		this.setState({PossibleMatches: [...this.state.PossibleMatches, {id: nextId, upperComponent: this.props.upperComponent, lowerComponent: this.props.upperComponent}], wardrobeCounter: nextId}).then(() => {
+		   			return {currentUpperComponent: this.state.PossibleMatches[this.state.PossibleMatches.length - 1].currentUpperComponent, currentLowerComponent: this.state.PossibleMatches[this.state.PossibleMatches.length - 1].currentLowerComponent};
+		   		});
+   		        localStorage.setItem(this.state.possibleMatches[this.state.possibleMatches.length - 1].id, this.state.possibleMatches[this.state.possibleMatches.length - 1]);
 		   }
 		   else{
 		     return;    	    
@@ -109,8 +144,6 @@ class Wardrobe extends Component{
 			return false;
 	    }
 	}
-
-
 	// Adding PossibleMatches and scrolling ability to Wardrobe component subclass 
         // refer to https://css-tricks.com/debouncing-throttling-explained-examples/ to make sure wardrobe
         // design is functionally fit to take care of any desired addtional pieces.      
@@ -121,12 +154,18 @@ class Wardrobe extends Component{
 		      <div className = 'Wardrobe'>
 		        <ReactCSSTransitionGroup transitionName = "EachMatch" transitionEnterTimeout = {300} transitionLeaveTimeout = {300}>
 					{this.state.PossibleMatches.map((preference, index) => {
-	         			return <EachMatch key={preference.createdAt} {...preference} removeMatch={this.state.removeMatch}/>
+	         			return <EachMatch key={preference.createdAt} removeMatch={this.state.removeMatch}/>
 					})}		
 			 	</ReactCSSTransitionGroup>
 		      </div>
 		)
 	}
+}
+
+Wardrobe.contextChildTypes = {
+	currentUpperComponent: PropTypes.object,
+	currentLowerComponent: PropTypes.object,
+	whichType: PropTypes.string
 }
 
 export default Wardrobe

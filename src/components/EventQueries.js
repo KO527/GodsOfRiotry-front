@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-
+import { connect } from 'react-redux';
+import { queryEvent } from '../actions/index'
 class EventQueries extends Component{
 	constructor(props){
 		super(props);
@@ -19,7 +20,7 @@ class EventQueries extends Component{
 	                        </header>
 	                        <div className = 'EventBlock'>
 		                        {this.props.queryEvent(this.props.query).forEach((event) => {
-			                        	return	<div>
+			                        	return ( <div>
 				                                    <span className = 'EventTitle'>JSON.parse(event["title"])</span>
 						                            {this.props.artist_events ? 
 						                            	this.props.artists_events.forEach((entertainer) => { 
@@ -35,9 +36,9 @@ class EventQueries extends Component{
 																										  			 			   	   </span>
 		 																									     	 		   })
 		 																													}
-					                        <span className = 'EventHappenstance'>JSON.parse(event["venue"]["name"])</span>
-					                        <span className = 'EventAddress'>JSON.parse(event["venue"]["address"]), JSON.parse(event["venue"]["extended_address"])</span>
-		                        		</div>	
+							                        <span className = 'EventHappenstance'>JSON.parse(event["venue"]["name"])</span>
+							                        <span className = 'EventAddress'>JSON.parse(event["venue"]["address"]), JSON.parse(event["venue"]["extended_address"])</span>
+		                        				</div>)	
 		                        		})
 								}
 						    </div>
@@ -47,5 +48,9 @@ class EventQueries extends Component{
 	}
 }
 
-export default EventQueries
+function mapStateToProps(state){
+	queried_events: state.eventOptions.queried_events
+}
+
+export default connect(mapStateToProps, {queryEvent})(EventQueries)
 

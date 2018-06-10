@@ -72,19 +72,18 @@ class LowerComponent extends Component{
 
 
 	centerPiece(i){
-    	newPiece = this.props.LowerComponents[i];
-    	newPiece.props.focusResidingPiece();
+		 this.residingLowerComponent.current.focus();
     	 if (this.residingUpperComponent && this.residingLowerComponent){
-    	 	this.props.setNewPiece(newPiece, 'match');
+    	 	this.props.setCurrentPiece(i, 'match');
     	 }
     	 else if (this.residingUpperComponent && this.residingLowerComponent == null){
-    	 	this.props.setNewPiece(newPiece, 'top');
+    	 	this.props.setCurrentPiece(i, 'top');
     	 }
     	 else if (this.residingLowerComponent && this.residingUpperComponent == null){
-    	 	this.props.setNewPiece(newPiece, 'bottom');
+    	 	this.props.setCurrentPiece(i, 'bottom');
     	 }
     	 else {
-    		return;	 	
+    		return;	
     	 }
     }	
 
