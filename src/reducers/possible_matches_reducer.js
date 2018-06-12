@@ -1,6 +1,8 @@
-import {INITIAL_PIECES, GET_ANCILLARY_PIECES, ORGANIZE_PIECES, SET_CONTEMPLATED_PIECE} from '../actions/types';
+ import {INITIAL_PIECES, GET_ANCILLARY_PIECES, ORGANIZE_PIECES, SET_CONTEMPLATED_PIECE} from '../actions/types';
 
 const initialState = {
+	 UpperComponents: [],
+	 LowerComponents: [],
 	 contemplated_piece: null,
 	 extraTops: [],
      extraBottoms: [],
@@ -29,14 +31,8 @@ export default function(state = initialState, action){
 				                           {suggestedTops: action.payload.suggested_tops},
 				                           {suggestedBottoms: action.payload.suggested_bottoms})
 		case ORGANIZE_PIECES:
-		    if (action.payload[0] === 'UpperComponents'){
-			   return Object.assign({}, state, {UpperComponents: action.payload[0]},
-					     		 			   {LowerComponents: action.payload[1]})
-		    }
-		    else {
-		    	return Object.assign({}, state, {UpperComponents: action.payload[1]},
-		    								    {LowerComponents: action.payload[0]})
-		    }
+			   return Object.assign({}, state, {UpperComponents: action.payload.UpperComponents},
+					     		 			   {LowerComponents: action.payload.LowerComponents})		    
 		case SET_CONTEMPLATED_PIECE:
 		   return Object.assign({}, state, {contemplated_piece: action.payload.contemplated_piece})
 		default:

@@ -12,8 +12,7 @@ export function ParseEventsByTeam(team, curr_date, event_forecast){
 		params: {
 			q: team,
 			client_id: MYCLIENTID, 
-			datetime_local: {gte: curr_date, lte: event_forecast}, 
-			geoip: 100
+			datetime_local: {gte: curr_date, lte: event_forecast}
 		}
 	});
 
@@ -29,7 +28,6 @@ export function ParseEventsByArtist(artist, curr_date, event_forecast){
 			performers: {slug: artist},
 			taxonomies: {name: 'concert'},
 			datetime_local: {gte: curr_date, lte: event_forecast},
-			geoip: 100,
 			client_id: MYCLIENTID
 		}
 	});
@@ -67,7 +65,6 @@ export function ParseSportingEvents(curr_date, event_forecast){
 			taxonomies: {name: 'concert'}, 
 			score: {gte: 0.7}, 
 			datetime_local: {gte: event_forecast, lte: event_forecast}, 
-			geoip: 100
 		}
 	});
 
@@ -78,15 +75,15 @@ export function ParseSportingEvents(curr_date, event_forecast){
 }
 
 export function queryEvent(term){
-	const request = axios.get(`${SEAT_GEEK_API}/2/events`, {
-		params: {
-			q: term
-		}
-	});
-
-	return {
-		type: SEARCH_TERM,
-		payload: request["events"]
+	return function(dispatch){
+		fetch(`${SEAT_GEEK_API}/2/events?client_id=${MYCLIENTID}&q=${term}`).then((res) => res.json())
+	   .then((json) => {
+	 	 console.log('Events: ', json);
+	 	 return dispatch({
+	 	 	type: SEARCH_TERM,
+	 	 	payload: json
+	 	 });
+	   })
 	}
 }
 
@@ -100,7 +97,7 @@ export function defaultPieces(){
 			}
 		}).then((res) => res.json())
 		.then((json) => {
-			console.log('Json: ', json);
+			console.log('defaultPieces: ', json);
 			dispatch(getInitialPieces(json))
 		})
 	}
@@ -171,7 +168,7 @@ export function arrangePieces(){
 		})
 		.then(res => res.json())
 			.then((json) => {
-				console.log('ArrangePiecesJson: ', json);
+				console.log('ArrangePieces: ', json);
 				dispatch(organizePieces(json))
 			})
 	}
