@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import EventQueries from './EventQueries';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 class EventSearchBar extends Component{
 
@@ -13,7 +14,12 @@ class EventSearchBar extends Component{
 	}
 	
 	onInputChange(event){
-		this.setState({q: event.target.value});
+		if (event.target.value){
+			var value = event.target.value;
+			value.toString();
+			value.replace(" ", "+");
+		}
+		this.setState({q: value});
 	}
 
 	render(){
@@ -21,6 +27,7 @@ class EventSearchBar extends Component{
 			<div>
 				<form onSubmit={this.onFormSubmit} className='EventSearch'>
 					<span className="EventSearch-btn-container">
+						<input onChange={_.debounce((term) => {this.onInputChange(term)}), 300} type="text" name="Search" value={this.state.value}></input>
 						<button type="submit" className="EventSearch-btn">
 							Search
 						</button>
@@ -31,6 +38,7 @@ class EventSearchBar extends Component{
 		)
 	}
 }
+
 
 
 export default EventSearchBar;

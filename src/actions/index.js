@@ -42,8 +42,10 @@ export function ParseEventsByArtist(artist, curr_date, event_forecast){
 export function GiveMeImmEvents(curr_date, event_forecast){
 	const request = axios.get(`${SEAT_GEEK_API}/2/events`, {
 		params: {
+			client_id: MYCLIENTID,
 			genres: {slug: 'pop'}, 
-			sort: {datetime_order: 'datetime_local.asc', score_order: 'score.desc'}, 
+			sort: datetime_local.asc, 
+			sort: score.desc,
 			taxonomies: {name: 'concert'}, 
 			score: {gte: 0.7}, 
 			datetime_local: {gte: curr_date, lte: event_forecast}, 
@@ -60,11 +62,12 @@ export function GiveMeImmEvents(curr_date, event_forecast){
 export function ParseSportingEvents(curr_date, event_forecast){
 	const request = axios.get(`${SEAT_GEEK_API}/2/events`, { 
 		params: {
-			genres: {slug: 'pop'}, 
-			sort: {datetime_order: 'datetime_local.asc', score_order: 'score.desc'},
-			taxonomies: {name: 'concert'}, 
-			score: {gte: 0.7}, 
-			datetime_local: {gte: event_forecast, lte: event_forecast}, 
+			client_id: MYCLIENTID,
+			sort: datetime_local.asc, 
+			sort: score.desc,
+			taxonomies: {name: 'sports'}, 
+			score: {gte: 0.7},
+			datetime_local: {gte: curr_date, lte: event_forecast}, 
 		}
 	});
 

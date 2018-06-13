@@ -4,6 +4,11 @@ import React, { Component } from 'react';
 class SportingEvents extends React.Component{
 	constructor(){
 		super(props);
+		
+		if(this.props.team_events == null){
+			this.props.ParseSportingEvents();
+		}
+
 		this.state = {
 			team: null
 		}
@@ -17,22 +22,14 @@ class SportingEvents extends React.Component{
 			    <header className='SportingEventsTitle'>
 			         Sporting Events
 			    </header>
-	            {this.props.ParseSportingEvents.map((event) => {
+	            {this.props.team_events.map((event) => {
 					<div className='EventBlock'>
 					   <span className = 'EventTitle'>
 						JSON.parse(event["title"])
 					   </span>
-				           {if (this.props.team_events){
-								this.props.team_events.map((team) => {
-									teams		    
-								});
-					     	}
-					     	else {
-								event.performers.map((team) => {
-						  			teams	
-								});
-					     	}	
-					  		}
+					   <span>			
+						 event
+					   </span>		    
 					  <span className = 'EventHappenstance'>
 						event.happening
 					  </span>
@@ -52,4 +49,4 @@ function mapStateToProps(state){
 	}
 }	
 
-export default connect(mapStateToProps)(SportingEvents);
+export default connect(mapStateToProps, {ParseSportingEvents})(SportingEvents);

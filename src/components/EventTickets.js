@@ -1,4 +1,10 @@
 import React, { Component } from 'react';
+import ImmediateEvents from './ImmediateEvents';
+import SportingEvents from './SportingEvents';
+import EventTicketsSearchBar from './EventTicketsSearchBar';
+import {EventsByArtist, ParseSportingEvents, queryEvent} from 'actions/index';
+import {connect} from 'react-redux';
+
 
 class EventTickets extends React.Component{
 	constructor(){
@@ -6,21 +12,26 @@ class EventTickets extends React.Component{
 		this.state = {
 			artist: null			
 		}
-	        this.current_date = (){
-	      	  var date = new Date();
-	      	  return date;
-	        }();
+	     
+	     this.current_date = this.current_date.bind(this);
+	     this.until_eight_months = this.until_eight_months.bind(this);  
+    }
 
-	        this.until_eight_months = (){
-	          var eight_months_from_now = new Date();
-	          eight_months_from_now.setMonth(eight_months_from_now.getMonth() + 8);
-		  
-	          return eight_months_from_now;
-	        }();
-        }
+    current_date(){
+      	var date = new Date();
+      	return date;
+    };
+
+    until_eight_months(){
+      var eight_months_from_now = new Date();
+      eight_months_from_now.setMonth(eight_months_from_now.getMonth() + 8);
+  
+      return eight_months_from_now;
+    };
+
 
 	render(){
-	    render(
+	    return(
 			<div className='EventOptions'>
 				<div className = 'EventOptionsContainer'>
 					<ImmediateEvents currDate = {this.current_date} eventForecast = {this.until_eight_months} />
@@ -32,5 +43,5 @@ class EventTickets extends React.Component{
 	}
 }
 
-export default connect(mapStateToProps, {EventsByArtist, ParseSportingEvents, queryEvent})(EventTickets);
+export default connect(null, {EventsByArtist, ParseSportingEvents, queryEvent})(EventTickets);
 

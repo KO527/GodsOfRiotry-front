@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PlaylistSearchBar from './PlaylistSearchBar';
 import PossibleMatches from './PossibleMatches';
 import EventTicketsSearchBar from './EventTicketsSearchBar';
+import EventTickets from './EventTickets';
 import Intro from './Intro';
-// import {BrowserRouter as Router, Route, browserHistory} from 'react-router-dom';
-
 
 class App extends Component{
    constructor(){
@@ -20,10 +19,11 @@ class App extends Component{
 			   <Intro/>
 				<PlaylistSearchBar/>
 	        	<PossibleMatches/>
-				<EventTicketsSearchBar/>
+				<EventTickets/>
 		    </div>
 		)
    };
 }
+
 
 export default App;

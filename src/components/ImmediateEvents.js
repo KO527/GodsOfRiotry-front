@@ -10,11 +10,10 @@ class ImmediateEvents extends React.Component{
 	}
 
 	render(){
+				var EventsParsed = new Promise(function(resolve, reject){
+						resolve(this.props.ParseEventsByArtist(entertainer.name, this.props.eventForecast));
+				});
 
-		const artists = <span className = 'ArtistName' onClick = { this.state.artist !== entertainer.name ? this.props.ParseEventsByArtist(entertainer.name, this.props.eventForecast).then(function(){this.setState({artist: entertainer.name})}) : return null}>
-                            entertainer.name
-                        </span>;
- 
                 return(
                         <div className = 'Immediate_Events'>
 	                        <header className = 'ImmEventsTitle'>
@@ -23,7 +22,16 @@ class ImmediateEvents extends React.Component{
 	                        {this.props.GiveMeImmEvents.map((event) => {
 	                                <div className = 'EventBlock'>
 	                                    <span className = 'EventTitle'>JSON.parse(event["title"])</span>
-		                                   {this.props.artist_events ? this.props.artists_events.map((entertainer) => { artists }) : event.performers.map((entertainer) => { artists })}	
+		                                   {this.props.artist_events ? 
+		                                   	this.props.artists_events.forEach((entertainer) => {return <span>
+	               																						 <span className = 'ArtistName' onClick = { this.state.artist !== entertainer.name ? EventsParsed.then(function(){this.setState({artist: entertainer.name})}) : return;}>
+																		                            		entertainer.name
+																		                        		 </span>
+																		                        	   </span> }) : event.performers.forEach((entertainer) => { return <span>
+																				                        	  															  <span className = 'ArtistName' onClick = { this.state.artist !== entertainer.name ? EventsParsed.then(function(){this.setState({artist: entertainer.name})}) : return;}>
+																																					                            entertainer.name
+																																					                      </span>
+																																			                  	  	   </span>})}
 				                        <span className = 'EventHappenstance'>JSON.parse(event["venue"]["name"])</span>
 				                        <span className = 'EventAddress'>JSON.parse(event["venue"]["address"]), JSON.parse(event["venue"]["extended_address"])</span>                                             
 	                        		</div>
@@ -41,4 +49,4 @@ function mapStateToProps(state){
 	}
 }
 
-export default connect(mapStateToProps, {GiveMeImmEvents, ParseEventsByArtist, queryEvent})(ImmediateEvents);
+export default connect(mapStateToProps, {GiveMeImmEvents, ParseEventsByArtist})(ImmediateEvents);

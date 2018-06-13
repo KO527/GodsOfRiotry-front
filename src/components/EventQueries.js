@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { queryEvent } from '../actions/index'
+import { queryEvent } from '../actions/index';
+
 class EventQueries extends Component{
 	constructor(props){
 		super(props);
+
 		this.state = {
-			entertainer: null
+			entertainer: null,
+			currentQuery: this.props.queried_events
 		}
+		
 	}
 
 	render(){
 			
-	
 		return(
 	
 				<div className = 'Immediate_Events'>
@@ -19,28 +22,30 @@ class EventQueries extends Component{
 	                           Upcoming Events
 	                        </header>
 	                        <div className = 'EventBlock'>
-		                        {this.props.queryEvent(this.props.query).forEach((event) => {
-			                        	return ( <div>
-				                                    <span className = 'EventTitle'>JSON.parse(event["title"])</span>
-						                            {this.props.artist_events ? 
-						                            	this.props.artists_events.forEach((entertainer) => { 
-						                            						return <span className = 'ArtistName'>
-																					  <span onClick = {this.state.entertainer !== entertainer.name ? this.props.ParseEventsByArtist(entertainer.name, this.props.eventForecast).then(function(){this.setState({artist: entertainer.name})}) : null}>
-																							entertainer.name
-																					  </span>
-																				    </span>}) : 
-		            																event.performers.forEach((entertainer) => { return <span className = 'ArtistName'>
-																			  																<span onClick = {this.state.entertainer !== entertainer.name ? this.props.ParseEventsByArtist(entertainer.name, this.props.eventForecast).then(function(){this.setState({artist: entertainer.name})}) : null}>
-																																				entertainer.name
-																															  				</span>
-																										  			 			   	   </span>
-		 																									     	 		   })
-		 																													}
-							                        <span className = 'EventHappenstance'>JSON.parse(event["venue"]["name"])</span>
-							                        <span className = 'EventAddress'>JSON.parse(event["venue"]["address"]), JSON.parse(event["venue"]["extended_address"])</span>
-		                        				</div>)	
+		                        {this.props.queried_events.forEach(event => {
+		                        		return ( 	<div>
+					                                    <span className = 'EventTitle'>JSON.parse(event["title"])</span>
+							                            {this.props.artist_events ? 
+							                            	this.props.artists_events.forEach((entertainer) => { 
+							                            						return <span className = 'ArtistName'>
+																						  <span onClick = {this.state.entertainer !== entertainer.name ? this.props.ParseEventsByArtist(entertainer.name, this.props.eventForecast).then(function(){this.setState({artist: entertainer.name})}) : null}>
+																								entertainer.name
+																						  </span>
+																					    </span>}) : 
+			            																event.performers.forEach((entertainer) => { return <span className = 'ArtistName'>
+																				  																<span onClick = {this.state.entertainer !== entertainer.name ? this.props.ParseEventsByArtist(entertainer.name, this.props.eventForecast).then(function(){this.setState({artist: entertainer.name})}) : null}>
+																																					entertainer.name
+																																  				</span>
+																											  			 			   	   </span>
+			 																									     	 		   })
+			 																													}
+								                        <span className = 'EventHappenstance'>JSON.parse(event["venue"]["name"])</span>
+								                        <span className = 'EventAddress'>JSON.parse(event["venue"]["address"]), JSON.parse(event["venue"]["extended_address"])</span>
+	                        						</div>
+		                        				)	
 		                        		})
-								}
+		                    	}
+								
 						    </div>
 
 				</div>
@@ -48,9 +53,11 @@ class EventQueries extends Component{
 	}
 }
 
+
 function mapStateToProps(state){
-	queried_events: state.eventOptions.queried_events
+
+	return {queried_events: state.eventOptions.queried_events}
 }
 
-export default connect(mapStateToProps, {queryEvent})(EventQueries)
+export default connect(mapStateToProps, {queryEvent})(ParseEventsByArtist, EventQueries)
 
