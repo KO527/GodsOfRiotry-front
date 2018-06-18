@@ -1,4 +1,4 @@
- import {INITIAL_PIECES, GET_ANCILLARY_PIECES, ORGANIZE_PIECES, SET_CONTEMPLATED_PIECE} from '../actions/types';
+import {INITIAL_PIECES, GET_ANCILLARY_PIECES, ORGANIZE_PIECES, SET_CONTEMPLATED_PIECE} from '../actions/types';
 
 const initialState = {
 	 UpperComponents: [],
