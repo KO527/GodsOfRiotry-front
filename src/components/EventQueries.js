@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { queryEvent } from '../actions/index';
+import { queryEvent, ParseEventsByArtist } from '../actions/index';
+
 
 class EventQueries extends Component{
 	constructor(props){
@@ -59,5 +60,5 @@ function mapStateToProps(state){
 	return {queried_events: state.eventOptions.queried_events}
 }
 
-export default connect(mapStateToProps, {queryEvent})(ParseEventsByArtist, EventQueries)
+export default connect(mapStateToProps, {queryEvent, ParseEventsByArtist})(EventQueries)
 

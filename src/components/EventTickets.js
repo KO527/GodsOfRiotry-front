@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import ImmediateEvents from './ImmediateEvents';
 import SportingEvents from './SportingEvents';
 import EventTicketsSearchBar from './EventTicketsSearchBar';
-import {EventsByArtist, ParseSportingEvents, queryEvent} from 'actions/index';
-import {connect} from 'react-redux';
 
 
-class EventTickets extends React.Component{
-	constructor(){
+class EventTickets extends Component{
+	constructor(props){
 		super(props);
 		this.state = {
 			artist: null			
@@ -43,5 +41,5 @@ class EventTickets extends React.Component{
 	}
 }
 
-export default connect(null, {EventsByArtist, ParseSportingEvents, queryEvent})(EventTickets);
+export default EventTickets;
 

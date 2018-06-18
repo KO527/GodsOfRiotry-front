@@ -7,24 +7,18 @@ import {arrangePieces, defaultPieces, setEvaluatedPiece, getCorrespondingPieces}
 import {_} from 'lodash';
 import PropTypes from 'prop-types';
 import createRef from 'create-react-ref/lib/createRef';
+import ActivityIndicator from 'react-activity-indicator';
 
 class PossibleMatches extends Component {
 	constructor(props){
 		super(props);
 
-		console.log('Props: ', props);
-		
-		if (props.contemplatedPiece === null){
-			this.props.defaultPieces();
-			this.props.arrangePieces();
-		}
-		
 		const initialState = {
 				currentComponent: {whichPiece: {whichType: null, currentUpperComponent: null, currentLowerComponent: null}},
 				UpperComponents: this.props.UpperComponents,
 				LowerComponents: this.props.LowerComponents,
 				UpperComponentEnabled: false,
-				LowerComponentEnabled: false
+				LowerComponentEnabled: false,
 		}
 
 		this.state = {
@@ -35,26 +29,52 @@ class PossibleMatches extends Component {
 		this.residingLowerComponent = createRef();
 		//Also need to this.prop.setEvaluatedPiece based off of this.props.setCurrentComponent if callback from Lower or Upper Components elapses time
 		this.setNewPiece = this.setNewPiece.bind(this);
+		this.defaultPieces = this.props.defaultPieces.bind(this);
+		this.arrangePieces = this.props.arrangePieces.bind(this);
+
 	}	
 
 	setDefaults(){
 		this.setState({currentComponent: {whichPiece: {currentUpperComponent: null, currentLowerComponent: null}}});
 	}
+ 
+ 	componentDidMount(props){
+ 		return new Promise((resolve, reject) => {
+ 			let state;
+ 			let {defaultPieces, arrangePieces, isFetching} = this.props;
+ 			let makeClothesAppear = function(){
+ 				defaultPieces();
+ 				arrangePieces();
+ 				isFetching = true;
+ 			}
+ 			
+ 			makeClothesAppear();
 
-	// static getDerivedStateFromProps(nextProps, prevState){
-		
-	// }
+ 			resolve(state);
+		}).then(function(state){
+			mapStateToProps(state);
+			this.props.isFetched = true
+			this.props.isFetching = false;
+		}).catch((error) => {
+			console.log('FetchClothesError: ', error);
+		})
+	}
+ 	
 
+	static componentWillReceiveProps(nextProps){
 
-	componentDidMount(){
+	 	const {currentUpperComponent, currentLowerComponent} = this.state.currentComponent.whichPiece;
 
-		if (this.props.contemplatedPiece.merch_type === 'top'){
-				this.setState({currentLowerComponent: this.props.suggestedBottoms[0], 
-							   currentUpperComponent: this.props.contemplatedPiece});
+	 	if (this.props.contemplatedPiece.merch_type === 'top' && nextProps.contemplatedPiece !== this.props.contemplatedPiece){
+	 			this.setState({currentLowerComponent: nextProps.suggestedBottoms[0], 
+	 					currentUpperComponent: nextProps.contemplatedPiece});
+	 	}
+		else if (this.props.contemplatedPiece.merch_type === 'bottom' && nextProps.contemplatedPiece !== this.props.contemplatedPiece){
+				this.setState({currentLowerComponent: nextProps.contemplatedPiece,
+					 	currentUpperComponent: nextProps.suggestedTops[0]});
 		}
-		else if (this.props.contemplatedPiece.merch_type === 'bottom'){
-				this.setState({currentLowerComponent: this.props.contemplatedPiece,
-							   currentUpperComponent: this.props.suggestedTops[0]});
+		else {
+			return null;
 		}
 	}
 
@@ -88,22 +108,22 @@ class PossibleMatches extends Component {
 		return match;
 	}
 
-	setNewPiece(newPiece, whichTypeTho){
+	setNewPiece(newPiece, whichType){
 		const { currentUpperComponent, currentLowerComponent } = this.state.currentComponent.whichPiece;
 
-		if (whichTypeTho === 'match'){
+		if (whichType === 'match'){
 			if (this.state.UpperComponentEnabled){
 				this.setDefaults();
-				this.setState({currentUpperComponent: this.residingUpperComponent, whichType: whichTypeTho});
+				this.setState({currentUpperComponent: this.residingUpperComponent, whichType: whichType});
 			}
 			else if (this.state.LowerComponentEnabled){
 				this.setDefaults();
-				this.setState({currentLowerComponent: this.residingLowerComponent, whichType: whichTypeTho});
+				this.setState({currentLowerComponent: this.residingLowerComponent, whichType: whichType});
 			}
-		} else if (whichTypeTho === 'top' && currentLowerComponent === null){ //UpperComponentEnabled
-			this.setState({currentUpperComponent: this.residingUpperComponent, whichType: whichTypeTho});
-		} else if (whichTypeTho === 'bottom' && currentUpperComponent === null) { //LowerComponentEnabled
-			this.setState({currentLowerComponent: this.residingLowerComponent, whichType: whichTypeTho});
+		} else if (whichType === 'top' && currentLowerComponent === null){ //UpperComponentEnabled
+			this.setState({currentUpperComponent: this.residingUpperComponent, whichType: whichType});
+		} else if (whichType === 'bottom' && currentUpperComponent === null) { //LowerComponentEnabled
+			this.setState({currentLowerComponent: this.residingLowerComponent, whichType: whichType});
 		} else {
 			return;
 		}
@@ -122,42 +142,57 @@ class PossibleMatches extends Component {
 		}
 	}
 	
+	renderDecision(){
+		
+		const {UpperComponents, LowerComponents} = this.props;
+		const {currentUpperComponent, currentLowerComponent} = this.state.currentComponent.whichPiece;
+		const {LowerComponentEnabled, UpperComponentEnabled} = this.state;
+
+		if (this.props.isFetching){
+        	 return (<div className='activityLoader'>
+  	      			 	<ActivityIndicator number={3} duration={200} activeColor="#fff" borderWidth={2} borderColor="50%" diameter={20}/>
+  	      		 	 </div>);
+        } else if (this.props.isFetched){
+           	    return (<div className = "PossibleMatches_Container">
+					    <i className = 'captureOutfit' onClick = {this.snapshotMatch}></i> 
+				            {UpperComponents.map((component) => {								
+						  			return (<UpperComponent key={component.createdAt} id={component.id} 
+				  							   switchComponent={this.switchFocus} 
+				  							   setCurrentPiece = {this.setNewPiece} 
+				  							   evaluatePiece={this.isOppositeComponentSuggested}
+				  							   image={component.image}
+		    						  		   toggleToPiece = {(LowerComponentEnabled) => {if (LowerComponentEnabled === false){this.setState({LowerComponentEnabled: true})}else{return;} this.setState({currentLowerComponent: this.props.suggestedBottoms[0]})}} 
+				  							   isLowerComponentEnabled={LowerComponentEnabled}
+				  							   ref={this.residingUpperComponent}
+				  							   className = {this.state.currentComponent.whichPiece.whichType === 'match' ? 'PossibleMatches_Container' : this.state.currentComponent.whichPiece.whichType === 'bottom' ? 'standalonePiece' : 'standalonePiece'}/>)
+				            		})
+				        	}
+		            	  	{LowerComponents.map((component) => {
+				  				 	return	(<LowerComponent key={component.createdAt} id={component.id} 
+		  									   setCurrentPiece = {this.setNewPiece} 
+		  									   evaluatePiece={this.isOppositeComponentSuggested}
+		  									   image={component.image}
+		  									   toggleToPiece={(UpperComponentEnabled) => {if (UpperComponentEnabled === false){this.setState({UpperComponentEnabled: true})}else{return;} this.setState({currentUpperComponent: this.props.suggestedTops[0]})}} 			   
+		  									   switchComponent={this.switchFocus}
+		  									   isUpperComponentEnabled={UpperComponentEnabled}
+		  									   ref={this.residingLowerComponent}
+		  									   className = {this.state.currentComponent.whichPiece.whichType === 'match' ? 'PossibleMatches_Container' : this.state.currentComponent.whichPiece.whichType === 'bottom' ? 'standalonePiece' : 'standalonePiece'}/>)						  		 					
+				 					})
+		        			}
+       					</div>)
+       	}
+	}
 
 	render(){
 
-
+	
 		return(	 
+
 	  	        <div className = 'GorClothingContainer'>
 		  	        {/*<Wardrobe upperComponent={this.state.currentComponent.whichPiece.currentUpperComponent} lowerComponent={this.state.currentComponent.whichPiece.currentLowerComponent} enableCapture={(snapshot) => this.snapshotMatch = snapshot} />*/}
-	                <div className = "PossibleMatches_Container">
-					    <i className = 'captureOutfit' onClick = {this.snapshotMatch}></i> 
-				            {this.props.UpperComponents.map((topPiece) => {								
-						  			return <UpperComponent key={topPiece.id} id={topPiece.id} 
-					  							   switchComponent={this.switchFocus} 
-					  							   setCurrentPiece = {this.setNewPiece} 
-					  							   evaluatePiece={this.isOppositeComponentSuggested}
-					  							   image={topPiece.image}
-			    						  		   toggleToPiece = {() => {if (this.state.LowerComponentEnabled === false){this.setState({LowerComponentEnabled: true})}else{return;} this.setState({currentLowerComponent: this.props.suggestedBottoms[0]})}} 
-					  							   isLowerComponentEnabled={this.state.LowerComponentEnabled}
-					  							   ref={this.residingUpperComponent}
-					  							   className = {this.state.currentComponent.whichPiece.whichType === 'match' ? 'PossibleMatches_Container' : this.state.currentComponent.whichPiece.whichType === 'bottom' ? 'standalonePiece' : 'standalonePiece'}/>;
-				            		})
-				        	}
-		            	  	{this.props.LowerComponents.map((bottomPiece) => {
-				  				 	return	<LowerComponent key={bottomPiece.id} id={bottomPiece.id} 
-			  									   setCurrentPiece = {this.setNewPiece} 
-			  									   evaluatePiece={this.isOppositeComponentSuggested}
-			  									   image={bottomPiece.image}
-			  									   toggleToPiece={() => {if (this.state.UpperComponentEnabled === false){this.setState({UpperComponentEnabled: true})}else{return;} this.setState({currentUpperComponent: this.props.suggestedTops[0]})}} 			   
-			  									   switchComponent={this.switchFocus}
-			  									   isUpperComponentEnabled={this.state.UpperComponentEnabled}
-			  									   ref={this.residingLowerComponent}
-			  									   className = {this.state.currentComponent.whichPiece.whichType === 'match' ? 'PossibleMatches_Container' : this.state.currentComponent.whichPiece.whichType === 'bottom' ? 'standalonePiece' : 'standalonePiece'}/>;						  		 					
-				 					})
-		        			}
-		       		</div>
+			          {this.renderDecision()}
 		       </div>
-		);
+		    );
 	}
 }
 
@@ -178,8 +213,14 @@ function mapDispatchToProps(dispatch){
     }
   }
 }
+PossibleMatches.defaultProps = {
+	isFetching: true,
+	isFetched: false
+}
 
 const myPropTypes = PossibleMatches.propTypes = {
+						isFetching: PropTypes.bool,
+						isFetched: PropTypes.bool,
 						UpperComponents: PropTypes.arrayOf(PropTypes.object),
 						LowerComponents: PropTypes.arrayOf(PropTypes.object),
 						extraTops: PropTypes.arrayOf(PropTypes.object),
