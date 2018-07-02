@@ -2,37 +2,39 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-const EachMatch = (props, context) => (	
+function EachMatch(props, context){
+
+		return (		
 	 	    <div>
 	         	<i className = "icon-destroy-link" onClick={() => props.removeMatch(props.id)}></i> 
-		          
-	         		{context.whichType === 'standalone' && context.currentUpperComponent } ? return {
-	     			    <span className = 'wardrobeStandalonePiece'>
-	                          {context.currentUpperComponent.image}
-	                    </span>
-	                } : {context.whichType === 'standalone' && context.currentLowerComponent} ? return { 
-	                    <span className = 'wardrobeStandalonePiece'>
-	                          {context.currentLowerComponent.image}
-	                    </span>
-	           		} : {context.whichType === 'match' && context.currentLowerComponent && context.currentUpperComponent} ? return {
-	           			<div className = 'PossibleMatchContainer'>
-		           			<span className = 'wardrobeUpperComponent'>
-		           				{context.currentUpperComponent.image}
-		           			</span>
-		           			<span className = 'wardrobeLowerComponent'>
-		           				{context.currentLowerComponent.image}
-		           			</span>
-		           		</div>
-	           		} : return;
-			</div>	
-)
+	         		{context.whichType === 'standalone' && context.currentUpperComponent  ? 
+	     			   		<span className = 'wardrobeStandalonePiece'>
+	                          	{context.currentUpperComponent.image}
+	                    	</span>
+	                : context.whichType === 'standalone' && context.currentLowerComponent ? 
+		                 	<span className = 'wardrobeStandalonePiece'>
+                         		{context.currentLowerComponent.image}
+                    		</span>
+	                : context.whichType === 'match' && context.currentLowerComponent && context.currentUpperComponent ?
+		           			<div className = 'PossibleMatchContainer'>
+			           			<span className = 'wardrobeUpperComponent'>
+			           				{context.currentUpperComponent.image}
+			           			</span>
+			           			<span className = 'wardrobeLowerComponent'>
+			           				{context.currentLowerComponent.image}
+			           			</span>
+			           		</div>
+			        : null
+			    	}
+			</div>
+		)
+};
 
 EachMatch.contextTypes = {
 	currentUpperComponent: PropTypes.object,
 	currentLowerComponent: PropTypes.object,
 	whichType: PropTypes.string
-};
-
+}
 
 
 class Wardrobe extends Component{
@@ -69,9 +71,10 @@ class Wardrobe extends Component{
 			return;
 		}
 	}
-	// componentDidMount(){
-	// 	this.props.enableCapture(this.capture);		
-	// }   
+   
+    componentDidMount(){
+	 	this.props.enableCapture(this.capture);		
+	}   
 	
 
 	shouldComponentUpdate(nextProps, nextState){

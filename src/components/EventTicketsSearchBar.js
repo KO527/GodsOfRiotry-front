@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import EventQueries from './EventQueries';
-import { connect } from 'react-redux';
 import _ from 'lodash';
 
 class EventSearchBar extends Component{

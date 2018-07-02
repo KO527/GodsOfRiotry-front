@@ -7,6 +7,10 @@ class EventQueries extends Component{
 	constructor(props){
 		super(props);
 
+		if (this.props.queried_events == null){
+			
+		}
+		
 		this.state = {
 			entertainer: null,
 			currentQuery: this.props.queried_events

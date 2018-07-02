@@ -9,33 +9,38 @@ class LowerComponent extends Component{
 	constructor(props){
 	    super(props);
 	    this.state = {
+	    	piece: this.refs.suggestedBottoms[0],
 			enabled: true,
 			timeout: 5000
 	    };
+
+		if (this.props.suggestedTops){
+			this.refs.residingLowerComponent.current.piece = this.props.contemplatedPiece;
+		}
+
 	}
+
         
 	@keydownScoped(37, 38, 39)
        
 	componentWillEnter(event, callback){
                 if (document.activeElement === this){
                         var piece = this.indexOf(this.props.LowerComponents);
-                        var i;
+
                         if (event.which === 37){
-                              i = piece;
-                              piece++;
+                              piece--;
                               if (piece < 0){
 							  	piece = this.props.LowerComponents.length - 1;
 							  }
-							  TweenMax.fromTo(this.props.LowerComponents[i], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: this.centerPiece(piece)});
+							  TweenMax.fromTo(this.props.LowerComponents[piece], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: this.centerPiece(piece)});
 			      			  this.props.evaluatePiece(this.props.id) ? this.setState({enabled: false}) : this.props.toggleToPiece();
 						}
                         else if (event.which === 39){
-                        	  i = piece;
-                        	  piece--
-                              if (piece < 0){
-                              	piece = this.props.LowerComponents[i] - 1;
+                        	  piece++;
+                              if (piece > this.props.LowerComponents.length - 1){
+                              	piece = 0;
                               }
-                              TweenMax.fromTo(this.props.LowerComponents[i], 0.3, {x: 250, opacity: 1}, {x: 0, opacity: 0, onComplete: this.centerPiece(piece)});
+                              TweenMax.fromTo(this.props.LowerComponents[piece], 0.3, {x: 250, opacity: 1}, {x: 0, opacity: 0, onComplete: this.centerPiece(piece)});
 		              		  this.props.evaluatePiece(this.props.id) ? this.setState({enabled: false}) : this.props.toggleToPiece();
 						}
                         else if (event.which === 38){

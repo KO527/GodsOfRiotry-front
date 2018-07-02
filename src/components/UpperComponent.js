@@ -18,13 +18,20 @@ class UpperComponent extends Component{
 	componentWillEnter(event, callback){
                 if (document.activeElement === this){
 						var piece = this.indexOf(this.props.UpperComponents);
+
                         if (event.which === 37){
                                 piece--;
+                                if (piece < 0){
+                                    piece = this.props.LowerComponents.length - 1;
+                                }
 								TweenMax.fromTo(this.props.UpperComponents[piece], 0.3, {x: -250, opacity: 0}, {x: 0, opacity: 1, onComplete: this.centerPiece(piece)});
                         		this.props.evaluatePiece(this.props.id) ? this.setState({enabled: false}) : this.props.toggleToPiece();
 						}
                         else if (event.which === 39){
                                 piece++;
+                                if (piece > this.props.LowerComponents.length - 1){
+                                   piece = 0;
+                                }
                                 TweenMax.fromTo(this.props.UpperComponents[piece], 0.3, {x: 250, opacity: 0}, {x: 0, opacity: 1, onComplete: this.centerPiece(piece)});
 	                        	this.props.evalutePiece(this.props.id) ? this.setState({enabled: false}) : this.props.toggleToPiece();
 						}
@@ -83,7 +90,7 @@ class UpperComponent extends Component{
 		return(
 
 			<div>
-		       <ReactInterval {...[enabled, timeout]} callback={()=>{ var curr=this.state.currentUpperComponent;
+		       <ReactInterval {...[enabled, timeout]} callback={()=>{ var curr=this.refs.residingUpperComponent.current.currentUpperComponent;
                                                                               var i = curr.indexOf(this.props.UpperComponents);
                                                                               var j = i;
     									      								  i++;

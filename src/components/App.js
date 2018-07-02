@@ -1,29 +1,36 @@
 import React, { Component } from 'react';
 import PlaylistSearchBar from './PlaylistSearchBar';
 import PossibleMatches from './PossibleMatches';
-import EventTicketsSearchBar from './EventTicketsSearchBar';
 import EventTickets from './EventTickets';
 import Intro from './Intro';
 
+
 class App extends Component{
-   constructor(){
-   	 super();
+   constructor(props){
+   	 super(props);
+
    	 this.state = {
    	 	greeting: "Wassup"
    	 }
+
+       this.setOfMatches = React.createRef();
    }
+
    render(){
-   		return (
+      
+
+   	return (
 		    <div>
 		    	<h1>{this.state.greeting}</h1>
 			   <Intro/>
 				<PlaylistSearchBar/>
-	        	<PossibleMatches/>
+	        	<PossibleMatches ref={this.setOfMatches} />
 				<EventTickets/>
-		    </div>
+		    </div> 
 		)
    };
 }
+
 
 
 export default App;
