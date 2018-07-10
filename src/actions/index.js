@@ -1,4 +1,4 @@
-import {ME_SET, TRACKS_SET, EVENTS_BY_TEAM, EVENTS_BY_ARTIST, SPORTING_EVENTS, INITIAL_PIECES, SET_CONTEMPLATED_PIECE, SEARCH_TERM, IMMEDIATE_EVENTS, GET_ANCILLARY_PIECES, REPLACE_INITIAL_PLAYLIST, ORGANIZE_PIECES, ESTABLISH_GENDER, ESTABLISH_BASIC_INFO, CONTACT_INFO, SHOW_USER} from './types';
+import {ME_SET, TRACKS_SET, EVENTS_BY_TEAM, EVENTS_BY_ARTIST, SPORTING_EVENTS, INITIAL_PIECES, SET_CONTEMPLATED_PIECE, SEARCH_TERM, IMMEDIATE_EVENTS, GET_ANCILLARY_PIECES, REPLACE_INITIAL_PLAYLIST, ORGANIZE_PIECES, ESTABLISH_GENDER, ESTABLISH_BASIC_INFO, CONTACT_INFO, SHOW_USER, SPECIFIC_EVENTS} from './types';
 import SC from 'soundcloud';
 import axios from 'axios';
 import {MYCLIENTID} from '../constants/auth';
@@ -8,73 +8,74 @@ const SEAT_GEEK_API = "https://api.seatgeek.com";
 
 
 export function ParseEventsByTeam(team, curr_date, event_forecast){
-	const request = axios.get(`${SEAT_GEEK_API}/2/events`, {
+	return axios.get(`${SEAT_GEEK_API}/2/events?client_id=MYCLIENTID`, {
 		params: {
-			q: team,
-			client_id: MYCLIENTID, 
-			datetime_local: {gte: curr_date, lte: event_forecast}
+			'q': 'team',
+			'taxonomies.name': 'sports',
+			'sort': 'datetime_local.asc', 
+			'datetime_local.gte': curr_date, 
+			'datetime.lte': event_forecast
+		}
+	}).then((resp) => {
+		return {
+			type: SPECIFIC_EVENTS,
+			payload: resp.data.events
 		}
 	});
-
- 	return {
-		type: EVENTS_BY_TEAM,
-		payload: request["events"]
-	}
 }
 
 export function ParseEventsByArtist(artist, curr_date, event_forecast){
-	const request = axios.get(`${SEAT_GEEK_API}/2/events`, {
+	return axios.get(`${SEAT_GEEK_API}/2/events?client_id=${MYCLIENTID}`, {
 		params: {
-			performers: {slug: artist},
-			taxonomies: {name: 'concert'},
-			datetime_local: {gte: curr_date, lte: event_forecast},
-			client_id: MYCLIENTID
+			'performers.slug': 'artist',
+			'taxonomies.name': 'concert',
+			'datetime_local.gte': curr_date, 
+			'datetime_local.lte': event_forecast,
+		}
+	}).then(resp => {
+		return {
+			type: EVENTS_BY_ARTIST,
+			payload: resp.data.events
 		}
 	});
-
-	return {
-		type: EVENTS_BY_ARTIST,
-		payload: request["events"]
-	}
 }
 
 
 export function GiveMeImmEvents(curr_date, event_forecast){
-	const request = axios.get(`${SEAT_GEEK_API}/2/events`, {
+	return axios.get(`${SEAT_GEEK_API}/2/events?client_id=${MYCLIENTID}`, {
 		params: {
-			client_id: MYCLIENTID,
-			genres: {slug: 'pop'}, 
-			sort: datetime_local.asc, 
-			sort: score.desc,
-			taxonomies: {name: 'concert'}, 
-			score: {gte: 0.7}, 
-			datetime_local: {gte: curr_date, lte: event_forecast}, 
-			geoip: 100
+			'genres.slug': 'pop', 
+			'sort': 'datetime_local.asc', 
+			'taxonomies.name': 'concert', 
+			'score.gte': 0.7, 
+			'datetime_local.gte': curr_date, 
+			'datetime_local.lte': event_forecast, 
+			'geoip': 100
 		}
-	});
-
-	return {
-		type: IMMEDIATE_EVENTS,
-		payload: request["events"]
-	}
+	}).then((resp) => {console.log('Response :', resp.data.events);
+						return {
+							type: IMMEDIATE_EVENTS,
+							payload: resp.data.events
+						}						
+			});	
 }
 
-export function ParseSportingEvents(curr_date, event_forecast){
-	const request = axios.get(`${SEAT_GEEK_API}/2/events`, { 
-		params: {
-			client_id: MYCLIENTID,
-			sort: datetime_local.asc, 
-			sort: score.desc,
-			taxonomies: {name: 'sports'}, 
-			score: {gte: 0.7},
-			datetime_local: {gte: curr_date, lte: event_forecast}, 
-		}
-	});
 
-	return {
-		type: SPORTING_EVENTS,
-		payload: request["events"]
-	}
+export function ParseSportingEvents(curr_date, event_forecast){
+		return axios(`${SEAT_GEEK_API}/2/events&client_id=${MYCLIENTID}`, { 
+			params: {
+				sort: ['datetime_local.asc'], 
+				taxonomies: {name: 'sports'}, 
+				score: {gte: 0.7},
+				datetime_local: {gte: curr_date, lte: event_forecast}
+			}
+		}).then((resp) => {
+			console.log('Sporting Events: ', resp.data.events);
+			return {
+				type: SPORTING_EVENTS,
+				payload: resp.data.events
+			};
+		})
 }
 
 export function queryEvent(term){
@@ -93,7 +94,7 @@ export function queryEvent(term){
 
 export function defaultPieces(){
 	return function(dispatch){
-		fetch(`${API_URL}/possible_matches/setup_possible_matches`, {
+		return fetch(`${API_URL}/possible_matches/setup_possible_matches`, {
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json'
@@ -236,4 +237,6 @@ export function ReturnUser(){
 	}
 }
 
+// doesnt work https://api.seatgeek.com/2/events&client_id=Mzk5NjE5MXwxNDUwNDExNzQ3?genres.slug=pop&sort=datetime_local.asc&taxonomies.name=concert&score.gte=0.7&geoip=100
 
+// 			https://api.seatgeek.com/2/events?client_id=Mzk5NjE5MXwxNDUwNDExNzQ3&taxonomies.name=concert&genres.slug=pop&sort=datetime_local.asc&score.gte=0.7&datetime_local.gte=2018-07-07&datetime_local.lte=2018-12-07&geoip=100
