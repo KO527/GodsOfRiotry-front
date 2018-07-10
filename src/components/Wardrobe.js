@@ -68,7 +68,7 @@ class Wardrobe extends Component{
 					whichType: 'standalone'}
 		}
 		else{
-			return;
+			return {currentLowerComponent: null, currentUpperComponent: null, whichType: ''}
 		}
 	}
    
@@ -78,35 +78,37 @@ class Wardrobe extends Component{
 	
 
 	shouldComponentUpdate(nextProps, nextState){
-		for (var i = 0; i < this.state.PossibleMatches; i++){
-			if (nextState.PossibleMatches[nextState.PossibleMatches.length - 1] !== this.state.PossibleMatches[i]){
-				continue;
-			}
-			else if (nextState.PossibleMatches[nextState.PossibleMatches.length - 1] === this.state.PossibleMatches[i]){
-				return false;
-			}
-			else{
+		const { PossibleMatches } = this.state;
+
+		for (var i = 0; i < PossibleMatches; i++){
+			if (nextState.PossibleMatches[nextState.PossibleMatches.length - 1] !== PossibleMatches[i]){
 				return true;
+			}
+			else if (nextState.PossibleMatches[nextState.PossibleMatches.length - 1] === PossibleMatches[i]){
+				return false;
 			}
 		}
 	}
 
     capture(){
+
+    	const {currentUpperComponent, currentLowerComponent, upperComponent, lowerComponent} = this.props;
+
            const nextId = this.state.wardrobeCounter + 1;
-		   if (this.props.currentUpperComponent && this.props.currentLowerComponent === null){
-				this.setState({PossibleMatches: [...this.state.PossibleMatches, {id: nextId, standaloneComponent: this.props.upperComponent}], wardrobeCounter: nextId}).then(() => {
+		   if (currentUpperComponent && currentLowerComponent === null){
+				this.setState({PossibleMatches: [...this.state.PossibleMatches, {id: nextId, standaloneComponent: upperComponent}], wardrobeCounter: nextId}).then(() => {
 					return {currentUpperComponent: this.state.PossibleMatches[this.state.PossibleMatches.length - 1].currentUpperComponent};
 				});
 			  	localStorage.setItem(this.state.possibleMatches[this.state.possibleMatches.length - 1].id, this.state.possibleMatches[this.state.possibleMatches.length - 1]);		
 		   }
-		   else if (this.props.currentLowerComponent && this.props.currentUpperComponent === null){
-		      this.setState({PossibleMatches: [...this.state.PossibleMatches, {id: nextId, standaloneComponent: this.props.lowerComponent}], wardrobeCounter: nextId}).then(() => {
+		   else if (currentLowerComponent && currentUpperComponent === null){
+		      this.setState({PossibleMatches: [...this.state.PossibleMatches, {id: nextId, standaloneComponent: lowerComponent}], wardrobeCounter: nextId}).then(() => {
 		      		return {currentLowerComponent: this.state.PossibleMatches[this.state.PossibleMatches.length - 1].currentLowerComponent}
 		      });
 		      localStorage.setItem(this.state.possibleMatches[this.state.possibleMatches.length - 1].id, this.state.possibleMatches[this.state.possibleMatches.length - 1]);
 		   }
-		   else if (this.props.currentLowerComponent & this.props.currentUpperComponent){
-		   		this.setState({PossibleMatches: [...this.state.PossibleMatches, {id: nextId, upperComponent: this.props.upperComponent, lowerComponent: this.props.upperComponent}], wardrobeCounter: nextId}).then(() => {
+		   else if (currentLowerComponent & currentUpperComponent){
+		   		this.setState({PossibleMatches: [...this.state.PossibleMatches, {id: nextId, upperComponent: upperComponent, lowerComponent: lowerComponent}], wardrobeCounter: nextId}).then(() => {
 		   			return {currentUpperComponent: this.state.PossibleMatches[this.state.PossibleMatches.length - 1].currentUpperComponent, currentLowerComponent: this.state.PossibleMatches[this.state.PossibleMatches.length - 1].currentLowerComponent};
 		   		});
    		        localStorage.setItem(this.state.possibleMatches[this.state.possibleMatches.length - 1].id, this.state.possibleMatches[this.state.possibleMatches.length - 1]);
@@ -165,7 +167,7 @@ class Wardrobe extends Component{
 	}
 }
 
-Wardrobe.contextChildTypes = {
+Wardrobe.childContextTypes = {
 	currentUpperComponent: PropTypes.object,
 	currentLowerComponent: PropTypes.object,
 	whichType: PropTypes.string

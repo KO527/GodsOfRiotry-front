@@ -14,8 +14,8 @@ class PossibleMatches extends Component {
 	constructor(props){
 		super(props);
 
-		const initialState = {
-				currentComponent: {whichPiece: {whichType: null, currentUpperComponent: null, currentLowerComponent: null}},
+		let initialState = {
+				currentMatch: {whichType: null, currentUpperComponent: null, currentLowerComponent: null},
 				UpperComponents: this.props.UpperComponents,
 				LowerComponents: this.props.LowerComponents,
 				UpperComponentEnabled: false,
@@ -33,60 +33,51 @@ class PossibleMatches extends Component {
 		//Also need to this.prop.setEvaluatedPiece based off of this.props.setCurrentComponent if callback from Lower or Upper Components elapses time
 		this.setNewPiece = this.setNewPiece.bind(this);
 
-		this.setOfMatches = React.createRef();
+		this.renderDecision = this.renderDecision.bind(this);
 	}	
 
 	static childContextTypes = {
 		currentUpperComponent: PropTypes.object,
-		currentLowerComponent: PropTypes.object
+		currentLowerComponent: PropTypes.object,
+		whichType: PropTypes.string
 	}
 
 	getChildContext(){
-		const { currentLowerComponent, currentUpperComponent} = this.state.currentComponent.whichPiece;
-		const { whichType } = this.state.currentComponent.whichPiece;
-		return {currentUpperComponent, currentLowerComponent};
+		const { currentLowerComponent, currentUpperComponent, whichType} = this.state.currentMatch;
+		return {currentUpperComponent: currentUpperComponent, currentLowerComponent: currentLowerComponent, whichType: whichType};
 	}
 
 
 	setDefaults(){
-		this.setState({currentComponent: {whichPiece: {currentUpperComponent: null, currentLowerComponent: null}}});
+		this.setState({currentMatch: {currentUpperComponent: null, currentLowerComponent: null}});
 	}
 
 
- 	componentDidMount(){
- 		let {defaultPieces, arrangePieces} = this.props;
-
- 		const {store} = this.context;
- 		let stateRef = store.getState();
+ 	async componentDidMount(){
  		
- 		async function makeClothesAppear(newState){
- 			let state = new Promise((resolve, reject) =>{
-			 				let summon = () => { defaultPieces();
-			 					 		   	   	 arrangePieces();}
-		 					summon();
-		 					resolve(mapStateToProps(newState));
-		 				});
- 			await state;
+		const { defaultPieces, arrangePieces, UpperComponents, contemplated_piece, suggestedBottoms, suggestedTops} = this.props;
+
+		try {
+			function summon(){ 
+				defaultPieces();
+				arrangePieces();
+			}
+			await summon();
+			
+		} catch(error){
+			throw Error(error);
 		}
 
-	    makeClothesAppear(stateRef).catch(alert);
-		this.setState({isFetched: true, isFetching: false});
-
-	}
- 	
-
-	componentWillReceiveProps(nextProps){
-
-	 	if (this.props.contemplatedPiece.merch_type === 'top' && nextProps.contemplatedPiece !== this.props.contemplatedPiece){
-	 			this.setState({currentLowerComponent: nextProps.suggestedBottoms[0], 
-	 					currentUpperComponent: nextProps.contemplatedPiece});
-	 	}
-		else if (this.props.contemplatedPiece.merch_type === 'bottom' && nextProps.contemplatedPiece !== this.props.contemplatedPiece){
-				this.setState({currentLowerComponent: nextProps.contemplatedPiece,
-					 	currentUpperComponent: nextProps.suggestedTops[0]});
+		if (contemplated_piece !== undefined && contemplated_piece !== null){
+			 if (contemplated_piece.merch_type === 'top'){
+				this.setState({isFetched: true, isFetching: false, currentUpperComponent: contemplated_piece, currentLowerComponent: suggestedBottoms[0]});
+			 }
+			 else if (contemplated_piece.merch_type === 'bottom'){
+			 	this.setState({isFetched: true, isFetching: false, currentLowerComponent: contemplated_piece, currentUpperComponent: suggestedTops[0]});
+			 }
 		}
-		else {
-			return null;
+		else if (UpperComponents.length === 0){
+			return;
 		}
 	}
 
@@ -95,7 +86,7 @@ class PossibleMatches extends Component {
 		_.debounce((whichComponent) => {
 			this.props.setEvaluatedPiece(whichComponent).then(function(){
 				this.props.getCorrespondingPieces();
-				if (this.props.contemplatedPiece.merch_type === 'top'){
+				if (this.props.contemplated_piece.merch_type === 'top'){
 					this.props.suggestedBottoms.forEach((bottom) => {
 						if (this.state.currentComponent.whichPiece.currentLowerComponent === bottom){
 						    match = true;
@@ -106,7 +97,7 @@ class PossibleMatches extends Component {
 						}
 					});
 				}
-				else if (this.props.contemplatedPiece.merch_type === 'bottom'){
+				else if (this.props.contemplated_piece.merch_type === 'bottom'){
 					this.props.suggestedTops.forEach((top) => {
 						if (this.state.currentComponent.whichPiece.currentUpperComponent === top){
 							match = false;
@@ -158,8 +149,9 @@ class PossibleMatches extends Component {
 	
 	renderDecision(){
 		
-		const {UpperComponents, LowerComponents, suggestedBottoms} = this.props;
-		const {currentComponent, LowerComponentEnabled, UpperComponentEnabled, isFetching, isFetched} = this.state;
+		const { LowerComponentEnabled, UpperComponentEnabled, isFetching, isFetched } = this.state;
+		const { suggestedBottoms, suggestedTops, UpperComponents, LowerComponents} = this.props;
+		const { whichType } = this.state.currentMatch;
 
 		if (isFetching){
         	 return (<div className='activityLoader'>
@@ -170,7 +162,7 @@ class PossibleMatches extends Component {
 
            	    	<div className = "PossibleMatches_Container">
 					       <i className = 'captureOutfit' onClick = {this.snapshotMatch}></i> 
-				           <TransitionGroup component = {this.setOfMatches}>
+				           <TransitionGroup component = {PossibleMatches}>
 					            {UpperComponents.map((component) => {								
 							  			return (<UpperComponent key={component.created_at} id={component.id} 
 					  							   switchComponent={this.switchFocus} 
@@ -180,22 +172,22 @@ class PossibleMatches extends Component {
 			    						  	       toggleToPiece = {() => {if (LowerComponentEnabled === false){this.setState({LowerComponentEnabled: true})} else return; this.setState({currentLowerComponent: suggestedBottoms[0]})}}
 					  							   isLowerComponentEnabled = {LowerComponentEnabled}
 					  							   ref = {this.residingUpperComponent}
-					  							   className = {currentComponent.whichPiece.whichType === 'match' ? 'PossibleMatches_Container' : currentComponent.whichPiece.whichType === 'bottom' ? 'standalonePiece' : 'standalonePiece'}/>
+					  							   className = {whichType === 'match' ? 'PossibleMatches_Container' : whichType === 'bottom' ? 'standalonePiece' : 'standalonePiece'}/>
 					  							)
 					            		})
 					        	}
 				        	</TransitionGroup>
-				        	<TransitionGroup component = {this.setOfMatches}>
+				        	<TransitionGroup component = {PossibleMatches}>
 			            	  	{LowerComponents.map((component) => {
 				  				 	return  (<LowerComponent key={component.created_at} id={component.id} 
 		  									   setCurrentPiece = {this.setNewPiece} 
 		  									   evaluatePiece={this.isOppositeComponentSuggested}
 		  									   image={component.image}
-		  									   toggleToPiece = {() => {if (UpperComponentEnabled === false){this.setState({UpperComponentEnabled: true})} else return; this.setState({currentUpperComponent: this.props.suggestedTops[0]})}} 			   
+		  									   toggleToPiece = {() => {if (UpperComponentEnabled === false){this.setState({UpperComponentEnabled: true})} else return; this.setState({currentUpperComponent: suggestedTops[0]})}} 			   
 		  									   switchComponent = {this.switchFocus}
 		  									   isUpperComponentEnabled = {UpperComponentEnabled}
 		  									   ref = {this.residingLowerComponent}
-		  									   className = {this.state.currentComponent.whichPiece.whichType === 'match' ? 'PossibleMatches_Container' : this.state.currentComponent.whichPiece.whichType === 'bottom' ? 'standalonePiece' : 'standalonePiece'}/>)						  		 					
+		  									   className = {whichType === 'match' ? 'PossibleMatches_Container' : whichType === 'bottom' ? 'standalonePiece' : 'standalonePiece'}/>)						  		 					
 			
 		        					})
 			            	  }
@@ -207,34 +199,18 @@ class PossibleMatches extends Component {
 
 	render(){
 
+		const {currentUpperComponent, currentLowerComponent} = this.state.currentMatch;
 	
 		return(	 
 
 	  	        <div className = 'GorClothingContainer'>
-	  	          <Wardrobe upperComponent={this.state.currentComponent.whichPiece.currentUpperComponent} lowerComponent={this.state.currentComponent.whichPiece.currentLowerComponent} enableCapture={(snapshot) => this.snapshotMatch = snapshot} />
+	  	          <Wardrobe upperComponent={currentUpperComponent} lowerComponent={currentLowerComponent} enableCapture={(snapshot) => this.snapshotMatch = snapshot} />
 		          {this.renderDecision()}
 		        </div>
 		    );
 	}
 }
 
-
-function mapDispatchToProps(dispatch){
-  return {
-    defaultPieces: () => {
-      dispatch(defaultPieces())
-    },
-    arrangePieces: () => {
-    	dispatch(arrangePieces())
-    },
-    getCorrespondingPieces: () => {
-    	dispatch(getCorrespondingPieces())
-    },
-    setEvaluatedPiece: () => {
-    	dispatch(setEvaluatedPiece())
-    }
-  }
-}
 
 
 PossibleMatches.contextTypes = {
@@ -253,7 +229,11 @@ const myPropTypes = PossibleMatches.propTypes = {
 						standaloneBottoms: PropTypes.arrayOf(PropTypes.object),
 						contemplatedPiece: PropTypes.object,
 						suggestedTops: PropTypes.arrayOf(PropTypes.object),
-						suggestedBottoms: PropTypes.arrayOf(PropTypes.object)
+						suggestedBottoms: PropTypes.arrayOf(PropTypes.object),
+						defaultPieces: PropTypes.func,
+						arrangePieces: PropTypes.func,
+						setEvaluatedPiece: PropTypes.func,
+						getCorrespondingPieces: PropTypes.func
 					}
 
 var stateProps = mapStateToProps;
@@ -261,16 +241,8 @@ var stateProps = mapStateToProps;
 PropTypes.checkPropTypes(myPropTypes, stateProps, 'prop', 'PossibleMatches');
 
 function mapStateToProps(state){
-
-			return {UpperComponents: state.possibleMatches.UpperComponents,
-					LowerComponents: state.possibleMatches.LowerComponents,
-					contemplatedPiece: state.possibleMatches.contemplated_piece,
-					extraTops: state.possibleMatches.extraTops,
-					extraBottoms: state.possibleMatches.extraBottoms,
-					standaloneTops: state.possibleMatches.standaloneTops,
-					standaloneBottoms: state.possibleMatches.standaloneBottoms,
-					suggestedTops: state.possibleMatches.suggestedTops,
-					suggestedBottoms: state.possibleMatches.suggestedBottoms}
+			const { UpperComponents, LowerComponents, contemplated_piece, extraTops, extraBottoms, standaloneBottoms, standaloneTops, suggestedBottoms, suggestedTops } = state.possibleMatches;
+			return {UpperComponents, LowerComponents, contemplated_piece, extraTops, extraBottoms, standaloneBottoms, standaloneTops, suggestedBottoms, suggestedTops };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PossibleMatches)
+export default connect(mapStateToProps, {defaultPieces, arrangePieces, getCorrespondingPieces, setEvaluatedPiece})(PossibleMatches)

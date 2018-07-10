@@ -1,24 +1,42 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {ParseSportingEvents, ParseEventsByTeam} from '../actions/index';
+import EventListing from '../EventListing';
 
 class SportingEvents extends Component{
 	constructor(props){
 		super(props);
 		
-		if(this.props.team_events === []){
-			this.props.ParseSportingEvents(props.curr_date, props.eventForecast);
-		}
-
 		this.state = {
 			team: null
 		}
 	}
+	
 	componentDidMount(){
-		console.log("PropsAfterwards: ", this.props.team_events);
+		const { team_events, currDate, eventForecast, ParseSportingEvents } = this.props;
+		
+		if(team_events.length === 0){
+			ParseSportingEvents(currDate(), eventForecast());
+		}
 	}
+
+	shouldComponentUpdate(nextState){
+
+		const { team_events, currDate, eventForecast, ParseEventsByTeam } = this.props;
+		const { team } = this.state;
+		
+		if (team_events.length === 0 || team !== nextState.team){
+			ParseEventsByTeam(team, currDate(), eventForecast());
+		}
+		
+	}
+
+	// console.log(toStandardTime('16:30:00'));
+
 	render(){
-		console.log("Props: ", this.props.team_events);
+		
+		const { team_events, specific_team_events, ParseEventsByTeam, ParseSportingEvents } = this.props;
+		const { team } = this.state;
 		const teams = '<span className = "TeamName" onClick = (){if (this.state.team !== team.name){this.props.ParseEventsByTeam(team.name).then(function(){this.setState({team: team.name})})}else{return;}}>'
 	
 		return(
@@ -26,26 +44,27 @@ class SportingEvents extends Component{
 			    <header className='SportingEventsTitle'>
 			         Sporting Events
 			    </header>
-	            {this.props.team_events.map((event) => {
-					<div className='EventBlock'>
-					   <span className = 'EventTitle'>
-						{JSON.parse(event["title"])}
-					   </span>
-					   <span>
-					   	{JSON.parse(event["performers"]).map((performer) => {
-						     return (<span className="performerNames">
-								   		{JSON.parse(performer["name"])}
-								   		<br />
-								   	 </span>)
-					   	})}
-					   </span>
-					   <span className = 'EventName'>			
-						 {JSON.parse(event["venue"]["name"])}
-					   </span>		    
-					  <span className = 'EventHappenstance'>
-						{JSON.parse(event["venue"]["address"]), JSON.parse(event["venue"]["extended_address"])}
-					  </span>
-				    </div>
+	            {team_events.map((event) => {
+		            		return (
+								<div className='EventBlock'>
+								   <span className = 'EventTitle'>
+									{event.title}
+								   </span>
+								   	{specific_team_events ? 
+						   				specific_team_events.forEach((event) => {
+							   				<EventListing 
+            									type_of_events={specific_team_events}
+            									methodOfChoice={ParseEventsByTeam}
+            								/>
+										}) : specific_team_events.forEach((specific_event) => {
+								   				<EventListing 
+                    									type_of_events={team_events}
+                    									methodOfChoice={ParseEventsByTeam}
+      											/>
+								   			})
+									}
+					    		</div>
+					    	)
 		  		})}
 		    </div>
 		)
@@ -54,7 +73,8 @@ class SportingEvents extends Component{
 
 function mapStateToProps(state){
 	return {
-		team_events: state.eventOptions.team_events
+		team_events: state.eventOptions.team_events,
+		specific_team_events: state.eventOptions.specific_team_events
 	}
 }	
 

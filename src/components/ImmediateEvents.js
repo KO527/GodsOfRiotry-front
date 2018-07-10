@@ -1,48 +1,62 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {GiveMeImmEvents, ParseEventsByArtist} from '../actions/index';
+import EventListing from '../EventListing';
 
-class ImmediateEvents extends React.Component{
+class ImmediateEvents extends Component{
 	constructor(props){
 		super(props);
 		
-		if (this.props.imm_events == []){
-			this.props.GiveMeImmEvents();
-		}
 
 		this.state = {
 			artist: null
 		}
 
-		this.ParseEventsByArtist = this.props.ParseEventsByArtist.bind(this);
-		this.eventForecast = this.props.eventForecast.bind(this);
 	}
 
+	componentDidMount(){
+		const {imm_events, currDate, eventForecast, GiveMeImmEvents} = this.props;
+
+		if (imm_events.length === 0){
+			GiveMeImmEvents(currDate(), eventForecast());
+		}
+
+	}
+
+
+	shouldComponentUpdate(nextState){
+		const { artist } = this.state;
+		const { artist_events } = this.props;
+
+		if (artist_events.length === 0 || artist !== nextState.artist){
+			return true;
+		}
+	}
+
+
 	render(){
+		
+		const {imm_events, artist_events, ParseEventsByArtist, currDate, eventForecast} = this.props;
+		const { artist } = this.state;
 
                 return(
                         <div className = 'Immediate_Events'>
 	                        <header className = 'ImmEventsTitle'>
 	                           Upcoming Events
 	                        </header>
-	                        {this.props.imm_events.map((event) => {
-	                                <div className = 'EventBlock'>
-	                                    <span className = 'EventTitle'>JSON.parse(event["title"])</span>
-		                                   {this.props.artist_events ? 
-		                                   	this.props.artists_events.forEach((entertainer) => {return <span>
-	               																						 <span className = 'ArtistName' onClick = { this.state.artist !== entertainer.name ? new Promise(function(resolve, reject, entertainer){this.ParseEventsByArtist(entertainer.name, this.eventForecast);}).then(function(){this.setState({artist: entertainer.name})}) : ''}>
-																		                            		entertainer.name
-																		                        		 </span>
-																		                        	   </span> }) : event.performers.forEach((entertainer) => { return <span>
-																				                        	  															  <span className = 'ArtistName' onClick = { this.state.artist !== entertainer.name ? new Promise(function(resolve, reject, entertainer){this.ParseEventsByArtist(entertainer.name, this.eventForecast);}).then(function(){this.setState({artist: entertainer.name})}) : ''}>
-																																					                            entertainer.name
-																																					                      </span>
-																																			                  	  	   </span>})}
-				                        <span className = 'EventHappenstance'>JSON.parse(event["venue"]["name"])</span>
-				                        <span className = 'EventAddress'>JSON.parse(event["venue"]["address"]), JSON.parse(event["venue"]["extended_address"])</span>                                             
-	                        		</div>
-	                        	})
-							}
+                            {artist_events ? 
+	                            artist_events.forEach((event) => {<EventListing 
+	                            									type_pf_events={artist_events}
+	                            									ParseEventsByArtist={ParseEventsByArtist}
+	                            								  />
+	                            								}) : imm_events.forEach((event) => {
+																        	<EventListing 
+																        		type_of_events={imm_events}
+																        		ParseEventsByArtist={ParseEventsByArtist}
+																			/>
+																		})
+																	}
+							
 						</div>
 				)
 	}	
