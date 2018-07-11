@@ -10,7 +10,7 @@ const SEAT_GEEK_API = "https://api.seatgeek.com";
 export function ParseEventsByTeam(team, curr_date, event_forecast){
 	return axios.get(`${SEAT_GEEK_API}/2/events?client_id=MYCLIENTID`, {
 		params: {
-			'q': 'team',
+			'q': team,
 			'taxonomies.name': 'sports',
 			'sort': 'datetime_local.asc', 
 			'datetime_local.gte': curr_date, 
@@ -27,7 +27,7 @@ export function ParseEventsByTeam(team, curr_date, event_forecast){
 export function ParseEventsByArtist(artist, curr_date, event_forecast){
 	return axios.get(`${SEAT_GEEK_API}/2/events?client_id=${MYCLIENTID}`, {
 		params: {
-			'performers.slug': 'artist',
+			'performers.slug': artist,
 			'taxonomies.name': 'concert',
 			'datetime_local.gte': curr_date, 
 			'datetime_local.lte': event_forecast,
@@ -62,33 +62,35 @@ export function GiveMeImmEvents(curr_date, event_forecast){
 
 
 export function ParseSportingEvents(curr_date, event_forecast){
-		return axios(`${SEAT_GEEK_API}/2/events&client_id=${MYCLIENTID}`, { 
+		return axios.get(`${SEAT_GEEK_API}/2/events?client_id=${MYCLIENTID}`, { 
 			params: {
-				sort: ['datetime_local.asc'], 
-				taxonomies: {name: 'sports'}, 
-				score: {gte: 0.7},
-				datetime_local: {gte: curr_date, lte: event_forecast}
+				'sort': 'datetime_local.asc', 
+				'taxonomies.name': 'sports', 
+				'score.gte': 0.7,
+				'datetime_local.gte': curr_date, 
+				'datetime_local.lte': event_forecast
 			}
 		}).then((resp) => {
 			console.log('Sporting Events: ', resp.data.events);
 			return {
 				type: SPORTING_EVENTS,
 				payload: resp.data.events
-			};
-		})
+			}
+		});
 }
 
 export function queryEvent(term){
-	return function(dispatch){
-		fetch(`${SEAT_GEEK_API}/2/events?client_id=${MYCLIENTID}&q=${term}`).then((res) => res.json())
-	   .then((json) => {
-	 	 console.log('Events: ', json);
-	 	 return dispatch({
+	return axios.get(`${SEAT_GEEK_API}/2/events?client_id=${MYCLIENTID}`, {
+		params: {
+			'q': term,
+			'sort': 'datetime_local.asc'
+		} 
+	}).then((resp) => { 
+	 	return {
 	 	 	type: SEARCH_TERM,
-	 	 	payload: json
-	 	 });
-	   })
-	}
+	 	 	payload: resp.data.events
+	 	}
+	});
 }
 
 
@@ -236,7 +238,3 @@ export function ReturnUser(){
 		payload: request
 	}
 }
-
-// doesnt work https://api.seatgeek.com/2/events&client_id=Mzk5NjE5MXwxNDUwNDExNzQ3?genres.slug=pop&sort=datetime_local.asc&taxonomies.name=concert&score.gte=0.7&geoip=100
-
-// 			https://api.seatgeek.com/2/events?client_id=Mzk5NjE5MXwxNDUwNDExNzQ3&taxonomies.name=concert&genres.slug=pop&sort=datetime_local.asc&score.gte=0.7&datetime_local.gte=2018-07-07&datetime_local.lte=2018-12-07&geoip=100
