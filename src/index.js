@@ -29,9 +29,10 @@ ReactDOM.render(
 	  <Provider store={store}>
               <Router history={history}>
                 <div>
-                    <Route path="/" component={App}/>
+                    <Route path="/" store={store} component={App}/>
                 </div>
               </Router>
       </Provider>, document.getElementById('root'));
 registerServiceWorker();
 
+export default store;
