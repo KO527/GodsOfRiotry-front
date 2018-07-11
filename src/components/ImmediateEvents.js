@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {GiveMeImmEvents, ParseEventsByArtist} from '../actions/index';
-import EventListing from '../EventListing';
+import EventListing from './EventListing';
 
 class ImmediateEvents extends Component{
 	constructor(props){
@@ -9,7 +9,7 @@ class ImmediateEvents extends Component{
 		
 
 		this.state = {
-			artist: null
+			selectedPerformer: null
 		}
 
 	}
@@ -25,19 +25,22 @@ class ImmediateEvents extends Component{
 
 
 	shouldComponentUpdate(nextState){
-		const { artist } = this.state;
-		const { artist_events } = this.props;
+		const { selectedPerformer } = this.state;
+		const { ParseEventsByArtist, currDate, eventForecast } = this.props;
 
-		if (artist_events.length === 0 || artist !== nextState.artist){
+		if (selectedPerformer !== nextState.selectedPerformer && selectedPerformer !== null){
+			ParseEventsByArtist(currDate(), eventForecast(), selectedPerformer);
 			return true;
 		}
+
+		return false;
 	}
 
 
 	render(){
 		
 		const {imm_events, artist_events, ParseEventsByArtist, currDate, eventForecast} = this.props;
-		const { artist } = this.state;
+		const { selectedPerformer } = this.state;
 
                 return(
                         <div className = 'Immediate_Events'>
@@ -46,13 +49,19 @@ class ImmediateEvents extends Component{
 	                        </header>
                             {artist_events ? 
 	                            artist_events.forEach((event) => {<EventListing 
-	                            									type_pf_events={artist_events}
-	                            									ParseEventsByArtist={ParseEventsByArtist}
+	                            									type_of_events={artist_events}
+	                            									currentEvent={event}
+		                            								methodOfChoice={ParseEventsByArtist}
+		                            								selectedPerformer={selectedPerformer}
+		                            								changeState={this.checkTypeOfEvent}
 	                            								  />
 	                            								}) : imm_events.forEach((event) => {
 																        	<EventListing 
 																        		type_of_events={imm_events}
-																        		ParseEventsByArtist={ParseEventsByArtist}
+																        		methodOfChoice={ParseEventsByArtist}
+																        		currentEvent={event}
+																        		selectedPerformer={selectedPerformer}
+																        		checkTypeOfEvent={this.checkTypeOfEvent}
 																			/>
 																		})
 																	}

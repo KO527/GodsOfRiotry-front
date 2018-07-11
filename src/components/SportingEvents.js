@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {ParseSportingEvents, ParseEventsByTeam} from '../actions/index';
-import EventListing from '../EventListing';
+import EventListing from './EventListing';
 
 class SportingEvents extends Component{
 	constructor(props){
 		super(props);
 		
 		this.state = {
-			team: null
+			selectedPerformer: null
 		}
+
+		this.checkTypeOfEvent = this.checkTypeOfEvent.bind(this);
 	}
 	
 	componentDidMount(){
@@ -23,21 +25,30 @@ class SportingEvents extends Component{
 	shouldComponentUpdate(nextState){
 
 		const { team_events, currDate, eventForecast, ParseEventsByTeam } = this.props;
-		const { team } = this.state;
+		const { selectedPerformer } = this.state;
 		
-		if (team_events.length === 0 || team !== nextState.team){
-			ParseEventsByTeam(team, currDate(), eventForecast());
+		if (selectedPerformer !== nextState.selectedPerformer && selectedPerformer !== null){
+			ParseEventsByTeam(selectedPerformer, currDate(), eventForecast());
+			return true;
 		}
+
+		return false;
 		
 	}
 
-	// console.log(toStandardTime('16:30:00'));
+	checkTypeOfEvent(performer, type_of_events){
+		let kind_of_events = type_of_events;
+		if (kind_of_events === 'artist_events'){
+			this.setState({artist: performer.name});
+		} else if (kind_of_events === 'team_events' || kind_of_events === 'specific_team_events'){
+			this.setState({team: performer.name});
+		}
+	}
 
 	render(){
 		
 		const { team_events, specific_team_events, ParseEventsByTeam, ParseSportingEvents } = this.props;
-		const { team } = this.state;
-		const teams = '<span className = "TeamName" onClick = (){if (this.state.team !== team.name){this.props.ParseEventsByTeam(team.name).then(function(){this.setState({team: team.name})})}else{return;}}>'
+		const { selectedPerformer } = this.state;
 	
 		return(
 			<div className = "Sporting_Events">
@@ -51,15 +62,21 @@ class SportingEvents extends Component{
 									{event.title}
 								   </span>
 								   	{specific_team_events ? 
-						   				specific_team_events.forEach((event) => {
+						   				specific_team_events.forEach((specific_event) => {
 							   				<EventListing 
             									type_of_events={specific_team_events}
             									methodOfChoice={ParseEventsByTeam}
+            									currentEvent={specific_event}
+            									checkTypeOfEvent={this.checkTypeOfEvent}
+            									selectedPerformer={selectedPerformer}
             								/>
-										}) : specific_team_events.forEach((specific_event) => {
+										}) : team_events.forEach((specific_event) => {
 								   				<EventListing 
-                    									type_of_events={team_events}
-                    									methodOfChoice={ParseEventsByTeam}
+                									type_of_events={team_events}
+                									methodOfChoice={ParseEventsByTeam}
+                									currentEvent={specific_event}
+                									checkTypeOfEvent={this.checkTypeOfEvent}
+                									selectedPerformer={selectedPerformer}
       											/>
 								   			})
 									}

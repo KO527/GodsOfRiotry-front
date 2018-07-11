@@ -7,9 +7,6 @@ import EventTicketsSearchBar from './EventTicketsSearchBar';
 class EventTickets extends Component{
 	constructor(props){
 		super(props);
-		this.state = {
-			artist: null			
-		}
 	     
 	     this.current_date = this.current_date.bind(this);
 	     this.until_eight_months = this.until_eight_months.bind(this);  
