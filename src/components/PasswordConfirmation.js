@@ -11,9 +11,14 @@ class PasswordConfirmation extends Component{
 		let userPromise = fetch('/ContactInfo', {
 			method: "POST",
 			body: JSON.stringify({passwordConfirmation: user.passwordConfirmation})
-		}).then((response) => {
-			dispatch(actions.change('Intro.ContactInfo', userPromise));
+		})
+		.then((resp) => resp.json())
+		.then(resp) => {
+			return resp;	
 		});
+	
+		dispatch(actions.change('Intro.ContactInfo', userPromise));
+		dispatch(actions.submit('Intro'));
 	}
 
 	render(){

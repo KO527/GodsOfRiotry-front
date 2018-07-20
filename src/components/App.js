@@ -2,35 +2,61 @@ import React, { Component } from 'react';
 import PlaylistSearchBar from './PlaylistSearchBar';
 import PossibleMatches from './PossibleMatches';
 import EventTickets from './EventTickets';
-import Intro from './Intro';
-
+import Login from './Login';
+import Home from './Home';
+import BasicInfo from './BasicInfo';
+import ContactInfo from './ContactInfo';
+import GenderForm from './GenderForm';
+import PrivateRoute from './checkIfUserLoggedIn';
+import {Router, Route} from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+ 
+export const history = createBrowserHistory();
 
 class App extends Component{
-   constructor(props){
-   	 super(props);
+   constructor(){
+   	 super();
 
-   	 this.state = {
-   	 	greeting: "Wassup"
-   	 }
+       history.listen((location, action) => {
+            // clear alert on location change
+            dispatch(alertActions.clear());
+        });
+   }
 
-       this.setOfMatches = React.createRef();
+   const auth = new Auth();
+
+   const handleAuthentication = (nextState, replace) => {
+     if (/access_token|id_token|error/.test(nextState.location.hash)) {
+       auth.handleAuthentication();
+     }
    }
 
    render(){
-      
+      const {loggedIn} = this.props;
 
    	return (
+         <Router history={history}>
 		    <div>
-		    	<h1>{this.state.greeting}</h1>
-			   <Intro/>
-				<PlaylistSearchBar/>
-	        	<PossibleMatches ref={this.setOfMatches} />
-				<EventTickets/>
-		    </div> 
+            <PrivateRoute exact path='/' component={Home}/>
+				<Route path = '/PlaylistSearchBar' component = {PlaylistSearchBar}/>
+	        	<Route path = '/PossibleMatches' component = {PossibleMatches}/>
+				<Route path = '/EventTickets' component = {EventTickets}/>
+            <Route path = '/Login' component = {Login}/>
+            <Route path = '/Home' component render={(props) => {
+                                                   handleAuthentication(props);
+                                                   return <Home {...props} />}}/>
+            <Route path = '/ContactInfo' component = {ContactInfo}/>
+            <Route path = '/BasicInfo' component = {BasicInfo}/>
+            <Route path = '/GenderForm' component = {GenderForm}/>
+		    </div>
+         </Router>
+
 		)
    };
 }
 
+function mapStateToProps(state){
+   loggedIn: state.authentication.loggedIn
+}
 
-
-export default App;
+export default connect(mapStateToProps, null)(App);
