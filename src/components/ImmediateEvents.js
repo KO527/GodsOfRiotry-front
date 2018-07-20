@@ -42,32 +42,32 @@ class ImmediateEvents extends Component{
 		const {imm_events, artist_events, ParseEventsByArtist, currDate, eventForecast} = this.props;
 		const { selectedPerformer } = this.state;
 
-                return(
-                        <div className = 'Immediate_Events'>
-	                        <header className = 'ImmEventsTitle'>
-	                           Upcoming Events
-	                        </header>
-                            {artist_events ? 
-	                            artist_events.forEach((event) => {<EventListing 
-	                            									type_of_events={artist_events}
-	                            									currentEvent={event}
-		                            								methodOfChoice={ParseEventsByArtist}
-		                            								selectedPerformer={selectedPerformer}
-		                            								changeState={this.checkTypeOfEvent}
-	                            								  />
-	                            								}) : imm_events.forEach((event) => {
-																        	<EventListing 
-																        		type_of_events={imm_events}
-																        		methodOfChoice={ParseEventsByArtist}
-																        		currentEvent={event}
-																        		selectedPerformer={selectedPerformer}
-																        		checkTypeOfEvent={this.checkTypeOfEvent}
-																			/>
-																		})
-																	}
-							
-						</div>
-				)
+        return(
+    			<div className = 'Immediate_Events'>
+           			<header className = 'ImmEventsTitle'>
+                   		Upcoming Events
+                	</header>
+                	<div className = 'EventBlock'>
+                    {artist_events ? 
+                        	artist_events.forEach((event) => {<EventListing 
+                        									type_of_events={artist_events}
+                        									currentEvent={event}
+                            								methodOfChoice={ParseEventsByArtist}
+                            								selectedPerformer={selectedPerformer}
+                            								changeState={this.checkTypeOfEvent}
+                        								  />
+                        								}) : imm_events.forEach((event) => {
+														        	<EventListing 
+														        		type_of_events={imm_events}
+														        		methodOfChoice={ParseEventsByArtist}
+														        		currentEvent={event}
+														        		selectedPerformer={selectedPerformer}
+														        		checkTypeOfEvent={this.checkTypeOfEvent}
+																	/>
+																})}
+                	</div>	
+				</div>
+		)
 	}	
 }
 

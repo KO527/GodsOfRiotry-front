@@ -55,34 +55,27 @@ class SportingEvents extends Component{
 			    <header className='SportingEventsTitle'>
 			         Sporting Events
 			    </header>
-	            {team_events.map((event) => {
-		            		return (
-								<div className='EventBlock'>
-								   <span className = 'EventTitle'>
-									{event.title}
-								   </span>
-								   	{specific_team_events ? 
-						   				specific_team_events.forEach((specific_event) => {
-							   				<EventListing 
-            									type_of_events={specific_team_events}
-            									methodOfChoice={ParseEventsByTeam}
-            									currentEvent={specific_event}
-            									checkTypeOfEvent={this.checkTypeOfEvent}
-            									selectedPerformer={selectedPerformer}
-            								/>
-										}) : team_events.forEach((specific_event) => {
-								   				<EventListing 
-                									type_of_events={team_events}
-                									methodOfChoice={ParseEventsByTeam}
-                									currentEvent={specific_event}
-                									checkTypeOfEvent={this.checkTypeOfEvent}
-                									selectedPerformer={selectedPerformer}
-      											/>
-								   			})
-									}
-					    		</div>
-					    	)
-		  		})}
+				<div className='EventBlock'>
+				   	{specific_team_events ? 
+		   				specific_team_events.forEach((specific_event) => {
+			   				<EventListing 
+								type_of_events={specific_team_events}
+								methodOfChoice={ParseEventsByTeam}
+								currentEvent={specific_event}
+								checkTypeOfEvent={this.checkTypeOfEvent}
+								selectedPerformer={selectedPerformer}
+							/>
+						}) : team_events.forEach((specific_event) => {
+				   				<EventListing 
+									type_of_events={team_events}
+									methodOfChoice={ParseEventsByTeam}
+									currentEvent={specific_event}
+									checkTypeOfEvent={this.checkTypeOfEvent}
+									selectedPerformer={selectedPerformer}
+									/>
+				   			})
+					}
+	    		</div>
 		    </div>
 		)
 	}

@@ -29,8 +29,8 @@ class EventTickets extends Component{
 	    return(
 			<div className='EventOptions'>
 				<div className = 'EventOptionsContainer'>
-					<ImmediateEvents currDate = {this.current_date} eventForecast = {this.until_eight_months} />
-					<SportingEvents currDate = {this.current_date} eventForecast = {this.until_eight_months}/>
+					<ImmediateEvents currDate={this.current_date} eventForecast={this.until_eight_months} />
+					<SportingEvents currDate={this.current_date} eventForecast={this.until_eight_months}/>
 					<EventTicketsSearchBar />
 				</div>
 			</div>
