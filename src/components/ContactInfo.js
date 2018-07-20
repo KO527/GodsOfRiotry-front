@@ -5,6 +5,10 @@ import PasswordConfirmation from './PasswordConfirmation';
 
 class ContactInfo extends Component{
 	
+	constructor(){
+		super();
+		this.handleSubmit.bind(this);
+	}
 
 	handleSubmit(user){
 		const {dispatch} = this.props;
@@ -13,9 +17,12 @@ class ContactInfo extends Component{
 			method: "POST",
 			body: JSON.stringify({email: user.email,
 					      password: user.password})
-		}).then((response) => {
-			dispatch(actions.change('Intro.ContactInfo', userPromise));
-		});
+		}).then((resp) => resp.json())
+		  .then((resp) => {
+		  		return(resp);
+		  });
+		dispatch(actions.change('Intro.ContactInfo', userPromise));
+		dispatch(actions.setPending('Intro.ContactInfo', true));
 	}
 	
 	render(){
@@ -45,7 +52,7 @@ class ContactInfo extends Component{
 			<div className = 'ContactInfo'>
 			<Form id = "contactInfo" model = "Intro.ContactInfo" onSubmit = {(user) => this.handleSubmit(user)} validators = {{'': onSubmitFailed()}}>
 				<div className = "field">
-					<label> Email: </label>
+					<label> Email: </label> 
 					<Control.text model = ".email"
 					      className = "emailText"
 					      placeholder = "Email"
@@ -70,9 +77,9 @@ class ContactInfo extends Component{
 				        </span>
 				    </div>		
 			    </div>
-				<button type = "submit">
+				<Control.button type = "submit">
 				 	Submit
-				</button>
+				</Control.button>
 			</Form>
 			<PasswordConfirmation password = {document.getElementsByClassName('passwordText').value} />
 			</div>				

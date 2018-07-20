@@ -36,9 +36,9 @@ class GenderForm extends Component{
 					model = ".gender"
 					show = "touched"
 					messages = {{valueMissing: 'Gender is required'}}/>	
-				 <button type = "submit">
-                        Submit
-                 </button>
+				 <Control.button type = "submit">
+                      Submit
+                 </Control.button>
 			</div>
 			</Form> 
 	

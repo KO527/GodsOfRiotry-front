@@ -3,7 +3,12 @@ import { actions, Control, Form } from 'react-redux-form';
 import {TweenMax} from "gsap";
 
 class BasicInfo extends Component{
- 	
+ 	  constructor(){
+      super();
+      
+      this.handleSubmit.bind(this);
+    }
+
 	  componentDidMount(){
 		  var BasicInfoForm = document.getElementById('BasicUserInfo');
 	    TweenMax.fromTo(BasicInfoForm, 1.5, {y: 160, opacity: 1}, {y: 0, opacity: 1});	
@@ -16,11 +21,13 @@ class BasicInfo extends Component{
 	              method: "POST",
 	              body: JSON.stringify({firstName: user.firstName,
 	                                    lastName: user.lastName})
-			}).then((response) => {
-	        	dispatch(actions.change('Intro.basicUserInfo', userPromise));
-		 	      dispatch(actions.change('Intro.basicUserInfo', userPromise));
-	 		      dispatch(actions.setPending('Intro.basicUserInfo', true));
-	 		});
+			}).then((resp) => resp.json())
+        .then((resp) => {
+          return (resp);
+      });
+
+        dispatch(actions.change('Intro.basicUserInfo', userPromise));
+        dispatch(actions.setPending('Intro.basicUserInfo', true));
 	  }	
 			//functionality to hide basicForm and display GenderForm
 
@@ -71,9 +78,9 @@ class BasicInfo extends Component{
                           </span>
                       </div>
                     </div>
-                    <button type = "submit">
+                    <Control.button model="Intro.basicUserInfo" type = "submit" disabled={{valid: false}}>
                         Submit
-                    </button>
+                    </Control.button>
             </Form>
         )
     }
