@@ -88,6 +88,7 @@ class Wardrobe extends Component{
 				return false;
 			}
 		}
+		return false;
 	}
 
     capture(){

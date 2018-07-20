@@ -8,7 +8,7 @@ import {arrangePieces, defaultPieces, setEvaluatedPiece, getCorrespondingPieces}
 import {_} from 'lodash';
 import PropTypes from 'prop-types';
 import createRef from 'create-react-ref/lib/createRef';
-import ActivityIndicator from 'react-activity-indicator';
+import Loader from 'react-loader-spinner';
 
 class PossibleMatches extends Component {
 	constructor(props){
@@ -44,7 +44,7 @@ class PossibleMatches extends Component {
 
 	getChildContext(){
 		const { currentLowerComponent, currentUpperComponent, whichType} = this.state.currentMatch;
-		return {currentUpperComponent: currentUpperComponent, currentLowerComponent: currentLowerComponent, whichType: whichType};
+		return { currentUpperComponent: currentUpperComponent, currentLowerComponent: currentLowerComponent, whichType: whichType };
 	}
 
 
@@ -83,12 +83,16 @@ class PossibleMatches extends Component {
 
 	isOppositeComponentSuggested(whichComponent){
 		var match = false;
+
+		const { setEvaluatedPiece, getCorrespondingPieces, contemplated_piece, suggestedBottoms, suggestedTops} = this.props;
+		const { currentMatch } = this.state;
+		
 		_.debounce((whichComponent) => {
-			this.props.setEvaluatedPiece(whichComponent).then(function(){
-				this.props.getCorrespondingPieces();
-				if (this.props.contemplated_piece.merch_type === 'top'){
-					this.props.suggestedBottoms.forEach((bottom) => {
-						if (this.state.currentComponent.whichPiece.currentLowerComponent === bottom){
+			setEvaluatedPiece(whichComponent).then(function(){
+				getCorrespondingPieces();
+				if (contemplated_piece.merch_type === 'top'){
+					suggestedBottoms.forEach((bottom) => {
+						if (currentMatch.currentLowerComponent === bottom){
 						    match = true;
 						    return match;
 						}
@@ -97,9 +101,9 @@ class PossibleMatches extends Component {
 						}
 					});
 				}
-				else if (this.props.contemplated_piece.merch_type === 'bottom'){
-					this.props.suggestedTops.forEach((top) => {
-						if (this.state.currentComponent.whichPiece.currentUpperComponent === top){
+				else if (contemplated_piece.merch_type === 'bottom'){
+					suggestedTops.forEach((top) => {
+						if (currentMatch.currentUpperComponent === top){
 							match = false;
 							return match;
 						}				
@@ -150,12 +154,12 @@ class PossibleMatches extends Component {
 	renderDecision(){
 		
 		const { LowerComponentEnabled, UpperComponentEnabled, isFetching, isFetched } = this.state;
-		const { suggestedBottoms, suggestedTops, UpperComponents, LowerComponents} = this.props;
+		const { suggestedBottoms, suggestedTops, UpperComponents, LowerComponents, registered} = this.props;
 		const { whichType } = this.state.currentMatch;
 
 		if (isFetching){
-        	 return (<div className='activityLoader'>
-  	      			 	<ActivityIndicator number={3} duration={200} activeColor="#fff" borderWidth={2} borderColor="50%" diameter={20}/>
+        	 return (<div className='Loader'>
+  	      			 	<Loader type="ThreeDots" color="#somecolor" height={80} width={80} />
   	      		 	 </div>);
         } else if (isFetched){
            	    return (
@@ -166,7 +170,8 @@ class PossibleMatches extends Component {
 					            {UpperComponents.map((component) => {								
 							  			return (<UpperComponent key={component.created_at} id={component.id} 
 					  							   switchComponent={this.switchFocus} 
-					  							   setCurrentPiece={this.setNewPiece} 
+					  							   setCurrentPiece={this.setNewPiece}
+					  							   registered={registered}
 					  							   evaluatePiece={this.isOppositeComponentSuggested}
 					  							   image={component.image}
 			    						  	       toggleToPiece = {() => {if (LowerComponentEnabled === false){this.setState({LowerComponentEnabled: true})} else return; this.setState({currentLowerComponent: suggestedBottoms[0]})}}
@@ -200,14 +205,15 @@ class PossibleMatches extends Component {
 	render(){
 
 		const {currentUpperComponent, currentLowerComponent} = this.state.currentMatch;
-	
-		return(	 
+		const { loggedIn } = this.props; 
 
+		return(	 
 	  	        <div className = 'GorClothingContainer'>
 	  	          <Wardrobe upperComponent={currentUpperComponent} lowerComponent={currentLowerComponent} enableCapture={(snapshot) => this.snapshotMatch = snapshot} />
 		          {this.renderDecision()}
+		          {!loggedIn && (<Intro/>)}
 		        </div>
-		    );
+		);
 	}
 }
 
@@ -242,7 +248,7 @@ PropTypes.checkPropTypes(myPropTypes, stateProps, 'prop', 'PossibleMatches');
 
 function mapStateToProps(state){
 			const { UpperComponents, LowerComponents, contemplated_piece, extraTops, extraBottoms, standaloneBottoms, standaloneTops, suggestedBottoms, suggestedTops } = state.possibleMatches;
-			return {UpperComponents, LowerComponents, contemplated_piece, extraTops, extraBottoms, standaloneBottoms, standaloneTops, suggestedBottoms, suggestedTops };
+			return {UpperComponents, LowerComponents, contemplated_piece, extraTops, extraBottoms, standaloneBottoms, standaloneTops, suggestedBottoms, suggestedTops, registered, registering };
 }
 
 export default connect(mapStateToProps, {defaultPieces, arrangePieces, getCorrespondingPieces, setEvaluatedPiece})(PossibleMatches)
