@@ -1,10 +1,11 @@
 import axios from 'axios';
-import { EVENTS_BY_ARTIST, SPECIFIC_EVENTS, IMMEDIATE_EVENTS, SPORTING_EVENTS, SEARCH_TERM } from './constants';
+import { EVENTS_BY_ARTIST, SPECIFIC_EVENTS, IMMEDIATE_EVENTS, SPORTING_EVENTS, SEARCH_TERM } from '../constants/types';
+import { MYCLIENTID } from '../constants/auth';
 
 const SEAT_GEEK_API = "https://api.seatgeek.com";
 
 export function ParseEventsByTeam(team, curr_date, event_forecast){
-	return axios.get(`${SEAT_GEEK_API}/2/events?client_id=MYCLIENTID`, {
+	return axios.get(`${SEAT_GEEK_API}/2/events?client_id=${MYCLIENTID}`, {
 		params: {
 			'q': team,
 			'taxonomies.name': 'sports',
@@ -15,7 +16,7 @@ export function ParseEventsByTeam(team, curr_date, event_forecast){
 	}).then((resp) => {
 		return {
 			type: SPECIFIC_EVENTS,
-			payload: resp.data.events
+			payload: resp.data.eventsr
 		}
 	});
 }
@@ -28,7 +29,7 @@ export function ParseEventsByArtist(artist, curr_date, event_forecast){
 			'datetime_local.gte': curr_date, 
 			'datetime_local.lte': event_forecast,
 		}
-	}).then(resp => {
+	}).then((resp) => {
 		return {
 			type: EVENTS_BY_ARTIST,
 			payload: resp.data.events

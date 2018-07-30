@@ -1,13 +1,14 @@
-import {ESTABLISH_GENDER, ESTABLISH_BASIC_INFO, CONTACT_INFO} from './types';
 import axios from 'axios';
-import userConstants from '../constants';
-import handleResponse from '../actions/index';
+import { userConstants } from '../constants/user.constants';
+import { handleResponse } from './';
 import history from '../components/App';
+import alertActions from './alert.actions';
+import { authHeader } from '../helpers/auth-header';
 
 const API_URL = 'http://localhost:8080/api/v1';
 
 
-export function EstablishNewUser(firstName, lastName, gender, email, password, passwordConfirmation){
+export function EstablishNewUser(firstName, lastName, gender, email, password, passwordConfirmation, dispatch){
 	axios.post(`${API_URL}/users/basic_info_params/`, {
 		params: {
 			first_name: `${firstName}`,
@@ -33,7 +34,7 @@ export function EstablishNewUser(firstName, lastName, gender, email, password, p
 
 }
 
-function login(username, password) {
+export function login(username, password, dispatch) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -68,16 +69,20 @@ export function logout() {
     return { type: userConstants.LOGOUT };
 }
 
-export function getAll(){
-	const requestOptions(){
+export function getAll(dispatch){
+	const requestOptions = {
 		method: 'GET',
 		headers: {...authHeader(), 'Content-Type': 'application/json'}
 	};
 
-	return fetch(`${API_URL}/users`, requestOptions).then(handleResponse)
+	return fetch(`${API_URL}/users`, requestOptions)
+				.then(handleResponse)
 				.then(users => {
 					users => dispatch(success(users)),
-					errors => dispatch(failure(error.toString()))
+					errors => {
+						dispatch(failure(errors.toString()));
+						dispatch(alertActions.error(errors.toString()))
+					}
 				});
 
 	function request() { return { type: userConstants.GETALL_REQUEST } }
