@@ -15,6 +15,7 @@ import thunk from 'redux-thunk';
 import {syncHistoryWithStore} from 'react-router-redux';
 import createLogger from 'redux-logger';
 
+
 SC.initialize({ client_id: CLIENT_ID, redirect_uri: REDIRECT_URI });
 
 const logger = createLogger();
@@ -23,7 +24,7 @@ const store = createStore(
     applyMiddleware(thunk, promise, logger)
 );
 
-let history = syncHistoryWithStore(createBrowserHistory(), store);
+export const history = syncHistoryWithStore(createBrowserHistory(), store);
 
 ReactDOM.render(
 	  <Provider store={store}>

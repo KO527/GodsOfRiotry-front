@@ -1,6 +1,4 @@
-import history from '../history';
-
-
+import history from '../';
 import auth0 from 'auth0-js';
 
 export default class Auth {
