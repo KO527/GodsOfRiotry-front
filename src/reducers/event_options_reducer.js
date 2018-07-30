@@ -1,4 +1,4 @@
-import { EVENTS_BY_TEAM, EVENTS_BY_ARTIST, SEARCH_TERM, IMMEDIATE_EVENTS, SPECIFIC_EVENTS, SPORTING_EVENTS } from '../actions/types';
+import { EVENTS_BY_TEAM, EVENTS_BY_ARTIST, SEARCH_TERM, IMMEDIATE_EVENTS, SPECIFIC_EVENTS, SPORTING_EVENTS } from '../constants/types';
 
 const initialState = {
 	imm_events: [],

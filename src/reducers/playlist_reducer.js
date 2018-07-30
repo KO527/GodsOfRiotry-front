@@ -1,4 +1,4 @@
-import {ME_SET, TRACKS_SET} from '../actions/types';
+import {ME_SET, TRACKS_SET} from '../constants/types';
 
 const initialState = {
 	SC_USER: null,
