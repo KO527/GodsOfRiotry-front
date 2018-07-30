@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { queryEvent, ParseEventsByArtist } from '../actions/index';
+import { queryEvent, ParseEventsByArtist } from '../actions/event_actions';
 import EventListing from './EventListing';
 import PropTypes from 'prop-types';
 import {_} from 'lodash';
@@ -99,10 +99,16 @@ class EventQueries extends Component{
 	}
 }
 
-EventQueries.propTypes = {
+const myPropTypes = EventQueries.propTypes = {
 		isFetching: PropTypes.bool,
-		isFetched: PropTypes.bool
+		isFetched: PropTypes.bool,
+		queried_events: PropTypes.arrayOf(PropTypes.object),
+		queryEvent: PropTypes.func
 }
+
+var stateProps = mapStateToProps;
+
+PropTypes.checkPropTypes(myPropTypes, stateProps, 'prop', 'EventQueries');
 
 function mapStateToProps(state){
 

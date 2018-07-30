@@ -10,13 +10,13 @@ const EventListing = ({currDate, checkTypeOfEvent, eventForecast, type_of_events
 	  const precisionDecision = "T"
 	  datetime_local = datetime_local.replace(precisionDecision, '   ');
 	  
-	  let miilitaryTime = datetime_local.substr(datetime_local.length - 8, datetime_local.length);
+	  let militaryTime = datetime_local.substr(datetime_local.length - 8, datetime_local.length);
 	  let eventDate = datetime_local.substr(0, datetime_local.length - 11);
 	  
-	  if (militaryTime[0].charAt(0) === 1 && miilitaryTime[0].charAt(1) > 2) {
-	    return [eventDate, (miilitaryTime[0] - 12) + ':' + miilitaryTime[1] + ':' + miilitaryTime[2] + ' P.M.'];
+	  if (militaryTime[0].charAt(0) === 1 && militaryTime[0].charAt(1) > 2) {
+	    return [eventDate, (militaryTime[0] - 12) + ':' + militaryTime[1] + ':' + militaryTime[2] + ' P.M.'];
 	  } else {
-	    return [eventDate, miilitaryTime.join(':') + ' A.M.'];
+	    return [eventDate, militaryTime.join(':') + ' A.M.'];
 	  }
 	}
 

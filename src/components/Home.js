@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
-import auth from './auth/auth';
-import PlaylistSearchBar from '/'
+import auth from '../auth/auth';
 import ReactPlayer from 'react-player';
+import PossibleMatches from './PossibleMatches';
+import EventTickets from './EventTickets';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 class Home extends Component{
 	constructor(props){
@@ -22,6 +25,11 @@ class Home extends Component{
   	render() {
     	const { isAuthenticated } = this.props.auth;
     	const { loggedIn, user } = this.props;
+    	const height = window.innerHeight - document.getElementsByClassName("header").style.height;
+
+    	const welcomeVid = {
+		    display: 'flex'
+		}
 
 	    return (
 		  	<div>
@@ -38,7 +46,7 @@ class Home extends Component{
 				            )
 				        }
 				    </div>
-			        <ReactPlayer height={height} width='100%' style={welcomeVid} playing=true muted loop=true />
+			        <ReactPlayer height={height} width='100%' style={welcomeVid} playing='true' muted loop='true' />
 		        </div>
 		        <PossibleMatches />
 		        <EventTickets />
@@ -49,8 +57,11 @@ class Home extends Component{
 }
 
 function mapStateToProps(state){
-	loggedIn: state.authentication.loggedIn,
-	user: state.authentication.user
+	const {loggedIn, user} = state.authentication;
+	return {
+		loggedIn: loggedIn,
+		user: user
+	}
 }
 
 export default connect(mapStateToProps, null)(Home);

@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { actions, Control, Form } from 'react-redux-form';
 import {TweenMax} from 'gsap';
 import ReactTimeout from 'react-timeout';
+import PropTypes from 'prop-types';
 
 class PasswordConfirmation extends Component{
+
 
 	handleSubmit(user){
 		const {dispatch} = this.props;
@@ -13,13 +15,18 @@ class PasswordConfirmation extends Component{
 			body: JSON.stringify({passwordConfirmation: user.passwordConfirmation})
 		})
 		.then((resp) => resp.json())
-		.then(resp) => {
+		.then((resp) => {
 			return resp;	
 		});
 	
 		dispatch(actions.change('Intro.ContactInfo', userPromise));
-		dispatch(actions.submit('Intro'));
+		dispatch(actions.setSubmitted('Intro', true));
+		this.goTo('PossibleMatches');
 	}
+
+	goTo(route) {
+    	this.props.history.replace(`/${route}`)
+  	}
 
 	render(){
 	
@@ -38,7 +45,7 @@ class PasswordConfirmation extends Component{
 		}	
 	
 		return(
-			<Form id = 'passwordConfirmationInfo' model = "Intro.ContactInfo" onSubmit= {(user) => this.handleSubmit(user)} validators = {{'': PasswordMismatch()}}>
+			<Form id = 'passwordConfirmationInfo' model = "Intro.ContactInfo" onSubmit={(user) => this.handleSubmit(user)} validators = {{'': PasswordMismatch()}}>
 			 	<div className = "field">
 					<label> Password Confirmation: </label>
 					<Control.text model = ".passwordConfirmation"

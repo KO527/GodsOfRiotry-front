@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {GiveMeImmEvents, ParseEventsByArtist} from '../actions/index';
+import {GiveMeImmEvents, ParseEventsByArtist} from '../actions/event_actions';
 import EventListing from './EventListing';
+import PropTypes from 'prop-types';
 
 class ImmediateEvents extends Component{
 	constructor(props){
@@ -50,12 +51,12 @@ class ImmediateEvents extends Component{
                 	<div className = 'EventBlock'>
                     {artist_events ? 
                         	artist_events.forEach((event) => {<EventListing 
-                        									type_of_events={artist_events}
-                        									currentEvent={event}
-                            								methodOfChoice={ParseEventsByArtist}
-                            								selectedPerformer={selectedPerformer}
-                            								changeState={this.checkTypeOfEvent}
-                        								  />
+	                        									type_of_events={artist_events}
+	                        									currentEvent={event}
+	                            								methodOfChoice={ParseEventsByArtist}
+	                            								selectedPerformer={selectedPerformer}
+	                            								changeState={this.checkTypeOfEvent}
+                        								  	/>
                         								}) : imm_events.forEach((event) => {
 														        	<EventListing 
 														        		type_of_events={imm_events}
@@ -70,6 +71,20 @@ class ImmediateEvents extends Component{
 		)
 	}	
 }
+
+const myPropTypes = ImmediateEvents.propTypes = {
+						ParseEventsByArtist: PropTypes.func,
+						GiveMeImmEvents: PropTypes.func,
+						currDate: PropTypes.func,
+						eventForecast: PropTypes.func,
+						imm_events: PropTypes.arrayOf(PropTypes.object),
+						artist_events: PropTypes.arrayOf(PropTypes.object)
+					}
+
+var stateProps = mapStateToProps;
+
+PropTypes.checkPropTypes(myPropTypes, stateProps, 'prop', 'ImmediateEvents');
+
 
 function mapStateToProps(state){
 	return{

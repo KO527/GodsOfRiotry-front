@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import Wardrobe from './Wardrobe';
 import UpperComponent from './UpperComponent';
 import LowerComponent from './LowerComponent';
+import Intro from './Intro';
 import TransitionGroup from 'react-transition-group/TransitionGroup';
-import {arrangePieces, defaultPieces, setEvaluatedPiece, getCorrespondingPieces} from '../actions/index';
+import {arrangePieces, defaultPieces, setEvaluatedPiece, getCorrespondingPieces} from '../actions/possible_matches_actions';
 import {_} from 'lodash';
 import PropTypes from 'prop-types';
 import createRef from 'create-react-ref/lib/createRef';
@@ -248,6 +249,7 @@ PropTypes.checkPropTypes(myPropTypes, stateProps, 'prop', 'PossibleMatches');
 
 function mapStateToProps(state){
 			const { UpperComponents, LowerComponents, contemplated_piece, extraTops, extraBottoms, standaloneBottoms, standaloneTops, suggestedBottoms, suggestedTops } = state.possibleMatches;
+			const { registering, registered } = state.registration;
 			return {UpperComponents, LowerComponents, contemplated_piece, extraTops, extraBottoms, standaloneBottoms, standaloneTops, suggestedBottoms, suggestedTops, registered, registering };
 }
 

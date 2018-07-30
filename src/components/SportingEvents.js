@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import {ParseSportingEvents, ParseEventsByTeam} from '../actions/index';
+import {ParseSportingEvents, ParseEventsByTeam} from '../actions/event_actions';
 import EventListing from './EventListing';
+import PropTypes from 'prop-types';
 
 class SportingEvents extends Component{
 	constructor(props){
@@ -33,7 +34,6 @@ class SportingEvents extends Component{
 		}
 
 		return false;
-		
 	}
 
 	checkTypeOfEvent(performer, type_of_events){
@@ -80,6 +80,21 @@ class SportingEvents extends Component{
 		)
 	}
 }	
+
+const myPropTypes = SportingEvents.propTypes = {
+						ParseEventsByTeam: PropTypes.func,
+						ParseSportingEvents: PropTypes.func,
+						team_events: PropTypes.arrayOf(PropTypes.object),
+						specific_team_events: PropTypes.arrayOf(PropTypes.object),
+						currDate: PropTypes.func,
+						eventForecast: PropTypes.func
+					}
+
+var stateProps = mapStateToProps;
+
+PropTypes.checkPropTypes(myPropTypes, stateProps, 'prop', 'SportingEvents');
+
+
 
 function mapStateToProps(state){
 	return {

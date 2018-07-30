@@ -22,24 +22,24 @@ class GenderForm extends Component{
 		return (
 
 			<Form id = 'GenderInfo' model = "Intro.GenderInfo" onSubmit = {(user) => this.handleSubmit(user)}>
-			<div className = "field">
-				<label> Gender: </label>
-				<label><Control.radio model = ".gender"
-				       value = "M"
-				       updateOn = "change"/>
-				</label>
-				<label><Control.radio model = ".gender"
-				       value = "F"
-				       updateOn = "change"/>
-				</label>
-				<Errors className = "errors"
-					model = ".gender"
-					show = "touched"
-					messages = {{valueMissing: 'Gender is required'}}/>	
-				 <Control.button type = "submit">
-                      Submit
-                 </Control.button>
-			</div>
+				<div className = "field">
+					<label> Gender: </label>
+					<label><Control.radio model = "GenderInfo.gender"
+					       value = "M"
+					       updateOn = "change"/>
+					</label>
+					<label><Control.radio model = "GenderInfo.gender"
+					       value = "F"
+					       updateOn = "change"/>
+					</label>
+					<Errors className = "errors"
+						model = ".gender"
+						show = "touched"
+						messages = {{valueMissing: 'Gender is required'}}/>	
+					 <Control.button type = "submit">
+	                      Submit
+	                 </Control.button>
+				</div>
 			</Form> 
 	
 		)
