@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {GET_ANCILLARY_PIECES, INITIAL_PIECES, SET_CONTEMPLATED_PIECE, ORGANIZE_PIECES} from '../constants/types';
 
 const API_URL = 'http://localhost:8080/api/v1';
