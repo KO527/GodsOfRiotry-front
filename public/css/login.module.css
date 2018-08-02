@@ -1,10 +1,10 @@
-.set-of-btns { margin-right: 0; }
-
-.Intro-btn-signup {margin-left: 50px;}
-
 .Intro-btn-signup, .Intro-btn-login {
 	background-color: #D1F1EA;
-	color: #000;
+	color: #D1E1FA;
+}
+
+.Intro-btn-signup:hover, .Intro-btn-login:hover {
+	background-color: #8092AD;
 }
 
 #welcome-view {
@@ -12,20 +12,35 @@
 	width: 100%;
 }
 
-#welcome-view > .Intro-title {
+.header > .Intro-title {
 	margin-top: 20px;
+	font-family: 'Lobster', cursive;
 }
 
-#LoginInfo > .field {
-	background-color: #FAECD1;
-	color: #AD9E80;
+
+@media only screen and (max-width: 400px){
+
+	.header{
+		display: flex;
+		justify-content: center;
+		align-items: space-around;
+		height: 35%;
+		width: 100%;
+		background-color: #FFE1A5;
+	}
+
+	#LoginInfo {
+		display: flex;
+		align-items: space-around;
+	}
+
 }
 
-@media only screen and (max-width: 960px){
+@media only screen and (min-width: 401px) and (max-width: 960px){
 	#welcome-view{
 		justify-content: center;
 	}
-
+	
 	#LoginInfo {
 		align-items: space-around;
 		flex-direction: column;
@@ -34,13 +49,9 @@
 		display: flex;
 	}
 
-	#LoginInfo > .field {
-		margin-top: 20px;
-	}
-
 	.header {
 		border-color: #1D222A;
-		background-color: #FAECD1;
+		background-color: #FFE1A5;
 	}
 
 	.Intro-btn-login {
@@ -55,6 +66,15 @@
 	}
 }
 
+@media only screen and (max-width: 960px){
+
+	#LoginInfo > .field {
+		margin-top: 20px;
+		background-color: #FAECD1;
+		color: #AD9E80;
+	}
+}
+
 @media only screen and (min-width: 961px){
 	#LoginInfo {
 		margin-left: auto;
@@ -64,8 +84,14 @@
 
 	#LoginInfo > .field {
 		margin-left: auto;
+		background-color: #FAECD1;
+		color: #AD9E80;
 	}
 
+	.setOfBtns { margin-right: 0; }
+
+	.Intro-btn-signup {margin-left: 50px;}
+	
 	.header {
 		background-color: #1D222A;
 		display: flex;
@@ -75,13 +101,12 @@
 		width: 100%;
 		align-items: center;
 	}
-
-	.set-of-btns {
-		margin-right: 0;
-	}
-	
-	.Intro-btn-signup {
-		margin-left: 50px;
-	}
 }
 
+@media only screen and (min-width: 401px){
+	
+	.welcome-firstName{
+		font-family: 'Lobster', cursive;
+		margin-left: auto;
+	}
+}
