@@ -5,6 +5,7 @@ import PossibleMatches from './PossibleMatches';
 import EventTickets from './EventTickets';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import styles from '../../public/css/home.module.css';
 
 class Home extends Component{
 	constructor(props){
@@ -33,12 +34,13 @@ class Home extends Component{
 
 	    return (
 		  	<div>
-		  		<div id='welcome-view'>
-		  			<div className='header'>
-		  				<span className='welcome-firstName'>Hello `${user.firstName}`</span>
+		  		<div id={styles.welcome-view}>
+		  			<div className={styles.header}>
+		  				<div className={styles.Intro-title}>GodsOfRiotry</div>
+		  				<span className={styles.welcome-firstName}>Hello `${user.firstName}`</span>
 				        {
 				          	loggedIn && !isAuthenticated && (
-				              <button className='logout-btn'
+				              <button className={styles.logout-btn}
 				                onClick={this.logout.bind(this)}
 				              >
 				                Log Out

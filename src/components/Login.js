@@ -93,8 +93,8 @@ class SignIn extends Component{
         return (
 			<div>        
 	        	<div id={styles.welcome-view}>
-	        			<div className={styles.Intro-title}>GodsOfRiotry</div>
 		        		<div className={styles.header}>
+				        	<div className={styles.Intro-title}>GodsOfRiotry</div>
 				        	<Form onSubmit={(user) => this.handleSubmit(user)} id={styles.LoginInfo} model="Intro.LoginInfo">
 				        						        		
 				        		<div className={styles.field}>
