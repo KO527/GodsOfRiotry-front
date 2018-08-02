@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import PossibleMatches from './PossibleMatches';
 import PlaylistSearchBar from './PlaylistSearchBar';
 import EventTickets from './EventTickets';
-
+import styles from '../../public/css/login.module.css';
 
 class SignIn extends Component{
 	constructor(props) {
@@ -92,12 +92,12 @@ class SignIn extends Component{
 
         return (
 			<div>        
-	        	<div id = 'welcome-view'>
-	        			<div className='Intro-title'>GodsOfRiotry</div>
-		        		<div className='header'>
-				        	<Form onSubmit={(user) => this.handleSubmit(user)} id="LoginInfo" model="Intro.LoginInfo">
+	        	<div id={styles.welcome-view}>
+	        			<div className={styles.Intro-title}>GodsOfRiotry</div>
+		        		<div className={styles.header}>
+				        	<Form onSubmit={(user) => this.handleSubmit(user)} id={styles.LoginInfo} model="Intro.LoginInfo">
 				        						        		
-				        		<div className="field">
+				        		<div className={styles.field}>
 					        		<label htmlFor="email">Email:</label>
 					        		<Control.text model=".email" 
 					        					  className="Email"
@@ -112,7 +112,7 @@ class SignIn extends Component{
 					        						   isRequired: 'Please provide Email Address',
 					        						   }}/>
 					        	</div>
-					        	<div className = "field">	
+					        	<div className={styles.field}>	
 									<label> Password: </label>
 									<Control.text model = ".password"
 										      placeholder = "Password"
@@ -126,13 +126,13 @@ class SignIn extends Component{
 							    </div>
 							    {!auth.isAuthenticated() && !loggedIn &&
 									(
-										<div className="set-of-btns">
+										<div className={styles.setOfBtns}>
 						                  <Control.button
-						                    className="Intro-btn-login"
+						                    className={styles.Intro-btn-login}
 						                  >
 						                    Log In
 						                  </Control.button>
-						                  <Control.button className = "Intro-btn-signup">{/*onClick={scrollTo the top of !authenticated version of PossibleMatches and TweenMax Intro*/}
+						                  <Control.button className={styles.Intro-btn-signup}>{/*onClick={scrollTo the top of !authenticated version of PossibleMatches and TweenMax Intro*/}
 						                  	Sign Up!
 						                  </Control.button>
 						                </div>
