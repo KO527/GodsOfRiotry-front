@@ -1,0 +1,87 @@
+.set-of-btns { margin-right: 0; }
+
+.Intro-btn-signup {margin-left: 50px;}
+
+.Intro-btn-signup, .Intro-btn-login {
+	background-color: #D1F1EA;
+	color: #000;
+}
+
+#welcome-view {
+	display: flex;
+	width: 100%;
+}
+
+#welcome-view > .Intro-title {
+	margin-top: 20px;
+}
+
+#LoginInfo > .field {
+	background-color: #FAECD1;
+	color: #AD9E80;
+}
+
+@media only screen and (max-width: 960px){
+	#welcome-view{
+		justify-content: center;
+	}
+
+	#LoginInfo {
+		align-items: space-around;
+		flex-direction: column;
+		justify-content: center;
+		position: relative;
+		display: flex;
+	}
+
+	#LoginInfo > .field {
+		margin-top: 20px;
+	}
+
+	.header {
+		border-color: #1D222A;
+		background-color: #FAECD1;
+	}
+
+	.Intro-btn-login {
+		align-self: flex-end;
+		margin-bottom: 25px;
+	}
+
+	.Intro-btn-signup {
+		position: absolute;
+		margin-right: 0;
+		top: -50px;
+	}
+}
+
+@media only screen and (min-width: 961px){
+	#LoginInfo {
+		margin-left: auto;
+		padding: 0;
+		display: inline;
+	}
+
+	#LoginInfo > .field {
+		margin-left: auto;
+	}
+
+	.header {
+		background-color: #1D222A;
+		display: flex;
+		justify-content: space-around;
+		position: relative;
+		height: 70px;
+		width: 100%;
+		align-items: center;
+	}
+
+	.set-of-btns {
+		margin-right: 0;
+	}
+	
+	.Intro-btn-signup {
+		margin-left: 50px;
+	}
+}
+
