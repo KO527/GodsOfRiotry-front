@@ -1,0 +1,46 @@
+#LoginInfo {
+	margin-left: auto;
+	padding: 0;
+	display: inline;
+}
+
+#LoginInfo > .field {
+	background-color: #FAECD1;
+	color: #AD9E80;
+}
+
+.logout-btn{
+	background-color: #D1F1EA;
+	border: 2px solid #8092AD;
+	color: #D1E1FA;
+	border-radius: 10px;
+	margin-right: 0;
+}
+
+.logout-btn:hover {
+	background-color: #8092AD;
+}
+
+.welcome-firstName {
+	font-family: 'Lobster', cursive;
+	margin-left: auto;
+}
+
+.header {
+	opacity: 0;
+	background-color: #1D222A;
+	display: flex;
+	justify-content: space-around;
+	position: relative;
+	height: 70px;
+	width: 100%;
+	align-items: center;
+}
+
+.header > .Intro-title {
+	font-family: 'Lobster', cursive;
+	font-size: 25px;
+}
+
+/*.header appending class */
+/*opacity: 1*/
