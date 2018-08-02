@@ -61,7 +61,7 @@ class SoundCloudExp extends Component {
 	render(){
 
 		return (
-			<div>
+			<div className= 'SCsearch-container'>
 				<Form id='SC-search' model="SoundCloud" onSubmit={(query) => this.handleSubmit(query)}>
 					<div className='search-bar'>
 						<Control.text model=".input"

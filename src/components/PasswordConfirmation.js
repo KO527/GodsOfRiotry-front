@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { actions, Control, Form } from 'react-redux-form';
 import {TweenMax} from 'gsap';
 import ReactTimeout from 'react-timeout';
-import PropTypes from 'prop-types';
 
 class PasswordConfirmation extends Component{
 

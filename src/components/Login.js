@@ -93,6 +93,7 @@ class SignIn extends Component{
         return (
 			<div>        
 	        	<div id = 'welcome-view'>
+	        			<div className='Intro-title'>GodsOfRiotry</div>
 		        		<div className='header'>
 				        	<Form onSubmit={(user) => this.handleSubmit(user)} id="LoginInfo" model="Intro.LoginInfo">
 				        						        		
@@ -125,14 +126,14 @@ class SignIn extends Component{
 							    </div>
 							    {!auth.isAuthenticated() && !loggedIn &&
 									(
-										<div>
+										<div className="set-of-btns">
 						                  <Control.button
 						                    className="Intro-btn-login"
 						                  >
 						                    Log In
 						                  </Control.button>
-						                  <Control.button className = "Intro-btn-signin">{/*onClick={scrollTo the top of !authenticated version of PossibleMatches and TweenMax Intro*/}
-						                  	Sign In
+						                  <Control.button className = "Intro-btn-signup">{/*onClick={scrollTo the top of !authenticated version of PossibleMatches and TweenMax Intro*/}
+						                  	Sign Up!
 						                  </Control.button>
 						                </div>
 					                )
@@ -146,7 +147,6 @@ class SignIn extends Component{
 	        	 		{!loggingIn && !loggedIn && (
 			        		<ReactPlayer height={height} width='100%' style={welcomeVid} playing='true' muted loop='true' />
 			        	)}
-			        	<div className='Title'>GodsOfRiotry</div>
 			    </div>
 	        	<PlaylistSearchBar />
 		        <PossibleMatches loggedIn={loggedIn}/>
