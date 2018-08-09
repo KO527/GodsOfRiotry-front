@@ -1,89 +1,167 @@
-import React, { Component } from 'react';
-import {querySC} from '../actions/track_search_actions';
-import { connect } from 'react-redux';
-import { Form, Control, actions, Errors } from 'react-redux-form';
-import checkQueryValidty from '../services/checkQueryValidity';
+import React from 'react';
+import checkQueryValidity from '../services/checkQueryValidity';
 
-class SoundCloudExp extends Component {
+import {
+  Container,
+  Input,
+  Card,
+  Button
+} from 'semantic-ui-react';
+
+class SCsearch extends Component {
 	constructor(){
 		super();
-		
-		this.state = {
+		this.init();
 
-		}
-
-		this.handleSubmit.bind(this);
-		this.renderTracks.bind(this);
+	    this.renderTracks.bind(this);
+		this.getTrack.bind(this);
 	}
 
-	shouldComponentUpdate(nextProps){
+	init(){
 
-		const {SCqueries} = this.props;
-
-		if (nextProps.SCqueries !== SCqueries){
-			let markup = this.renderTracks();
-			document.getElementsById('audioHere').innerHtml = markup;
-		}
+	    SC.initialize({
+	        client_id: '195d273fb18f4a9a75ebda65c1aa2631'
+	    });
 	}
 
+	componentDidMount(){
 
+	    var input; 
 
-	handleSubmit(query){
+	    document.querySelector(".search").addEventListener('click', function() {
+	      input = document.querySelector("input-search").value;
+	      this.getTrack(input);
+	    });
 
-		const {querySC, dispatch} = this.props;
+	    document.querySelector(".input-search").addEventListener('keyup', (e) => {
 
-		let SCPromise = fetch('/SoundCloud', {
-			method: 'post',
-			body: query
-		})
-		.then((res) => res.json())
-		.then((res) => {
-			dispatch(actions.submit('SoundCloud', checkQueryValidty(res)));			
-		});
-	}
+	      input = document.querySelector("input").value;
+
+	      if (e.which === 13) {
+	        this.getTrack(input);
+	      }
+	    });
+
+		const sideBar = document.querySelector(".js-playlist");
+    	sideBar.innerHTML = localStorage.getItem('key');
+
+    	this.getTrack();		
+
+    }
+
+	localStorageClear = e => {
+      e.preventDefault();
+      window.localStorage.clear();
+      document.location.reload(true);
+  	};
+
+	getTrack(inputValue) {
+
+	    //find all sounds of buskers licensed under 'creative commons share alike'
+	    SC.get('/tracks', {
+	      q: inputValue
+	    }).then((tracks) => { // then is a "promise"
+	      console.log(tracks);
+	      this.renderTracks(tracks);
+	    });
+  	}
 
 	renderTracks() {
 		const {SCqueries} = this.props;
 
-		return (
-			SCqueries.map((track) => {
-				<div className='box'>
-		 			<div src={track.stream_url}></div>
-		 				<button id='albumBtn' className='albumButton'>
-		 					<img id={track.id} src={track.artwork_url}></img>
-		 				</button>
-		 			<div id='songTitle' className='title'>{track.title}</div>
-		 		</div>
-		 	})
-		)		 
+		SCqueries.forEach((track) => {
+			
+			var card = document.createElement('div');
+		    card.classList.add("card");
+
+		    // image
+		    var imageDiv = document.createElement('div');
+		    card.classList.add("image");
+
+		    var image_img = document.createElement('img');
+		    image_img.classList.add('image_img');
+		    image_img.src = track.artwork_url || 'https://f4.bcbits.com/img/a2220063837_10.jpg';
+
+		    imageDiv.appendChild(image_img);
+
+		    // content
+		    var content = document.createElement('div');
+		    content.classList.add('content');
+
+		    var header = document.createElement('div');
+		    header.classList.add('header');
+		    header.innerHTML = '<a href="' + track.permalink_url + '" target="_blank">' + track.title + '</a>';
+
+		    // button 
+		    var button = document.createElement('div');
+		    button.classList.add('ui', 'bottom', 'attached', 'button', 'js-button');
+
+		    var icon = document.createElement('i');
+		    icon.classList.add('add', 'icon');
+
+		    var buttonText = document.createElement('span');
+		    buttonText.innerHTML = 'Add to playlist';
+
+		    // appendChild
+		    content.appendChild(header);
+
+		    button.appendChild(icon);
+		    button.appendChild(buttonText);
+
+		    button.addEventListener('click', function() {
+		      this.getEmbed(track.permalink_url);
+		    });
+
+		    card.appendChild(imageDiv);
+		    card.appendChild(content);
+		    card.appendChild(button);
+
+		    var searchResults = document.querySelector('#audioHere');
+		    searchResults.appendChild(card);
+
+	 	})
  	}
+
+ 	getEmbed(trackURL) {
+		  console.log('clicked');
+		  SC.oEmbed(trackURL, {
+		    auto_play: false
+		  }).then(function(embed) {
+		    console.log('oEmbed response: ', embed);
+
+		    var sideBar = document.querySelector('#playlist');
+
+		    var box = document.createElement('div');
+		    box.innerHTML = embed.html;
+
+		    sideBar.insertBefore(box, sideBar.firstChild);
+		    localStorage.setItem('key', sideBar.innerHTML); // set a key value pair
+
+		  });
+	}
+
 
 	render(){
 
 		return (
-			<div className= 'SCsearch-container'>
-				<Form id='SC-search' model="SoundCloud" onSubmit={(query) => this.handleSubmit(query)}>
-					<div className='search-bar'>
-						<Control.text model=".input"
-									  className='search'
-									  placeholder='Search'/>
-						<Errors model="SoundCloud.input"
-								messages={{NoSearchResults: 'This query returned no results.'}}/>
-					</div>
-					<Control.button className='search-btn'>
-						Search
-					</Control.button>
-				</Form>
-				<section id='audioHere'></section>
-			</div>
-		)
+		      <div id = "soundcloud-player">
+		        <Container className='col'>
+		          <div className='col-left js-playlist toggle'>
+		            <div className='inner'>
+		            </div>
+		          </div>
+		          <div className='col-right'>
+		            <div className = 'main icon'>
+		              <Input size='massive' icon='search' input = {{ className: 'input-search js-search' }} placeholder='Search for a song or artist...'/>
+		              <Button onClick={this.localStorageClear} className='clear' content='Clear Playlist'/>
+		              <Button content='Show/Hide Playlist' id='toggle' className='hide-toggle'/>
+		              <Card.Group className='js-search-results search-results'/>
+		            </div>
+		          </div>
+		        </Container>
+		      </div>
+    	)
 	}
 }
 
-function mapStateToProps(state){
-	return {
-		SCqueries: state.soundcloud.queries
-	}
-}
-
-export default connect(mapStateToProps, {querySC})(SoundCloudExp);
+export default SCsearch;
