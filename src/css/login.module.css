@@ -1,0 +1,113 @@
+.IntroBtnSignup, .IntroBtnLogin {
+	background-color: #D1F1EA;
+	color: #D1E1FA;
+	border: 2px solid #8092AD;
+}
+
+.IntroBtnSignup:hover, .IntroBtnLogin:hover {
+	background-color: #8092AD;
+}
+
+#welcomeView {
+	display: flex;
+	width: 100%;
+}
+
+.header > .IntroTitle {
+	margin-top: 20px;
+	font-family: 'Lobster', cursive;
+}
+
+
+@media only screen and (max-width: 400px){
+
+	.header{
+		display: flex;
+		justify-content: center;
+		align-items: space-around;
+		height: 35%;
+		width: 100%;
+		background-color: #FFE1A5;
+	}
+
+	#LoginInfo {
+		display: flex;
+		align-items: space-around;
+	}
+
+}
+
+@media only screen and (min-width: 401px) and (max-width: 960px){
+	#welcomeView{
+		justify-content: center;
+	}
+	
+	#LoginInfo {
+		align-items: space-around;
+		flex-direction: column;
+		justify-content: center;
+		position: relative;
+		display: flex;
+	}
+
+	.header {
+		border-color: #1D222A;
+		background-color: #FFE1A5;
+	}
+
+	.IntroBtnLogin {
+		align-self: flex-end;
+		margin-bottom: 25px;
+	}
+
+	.IntroBtnSignup {
+		position: absolute;
+		margin-right: 0;
+		top: -50px;
+	}
+}
+
+@media only screen and (max-width: 960px){
+
+	#LoginInfo > .field {
+		margin-top: 20px;
+		background-color: #FAECD1;
+		color: #AD9E80;
+	}
+}
+
+@media only screen and (min-width: 961px){
+	#LoginInfo {
+		margin-left: auto;
+		padding: 0;
+		display: inline;
+	}
+
+	#LoginInfo > .field {
+		margin-left: auto;
+		background-color: #FAECD1;
+		color: #AD9E80;
+	}
+
+	.setOfBtns { margin-right: 0; }
+
+	.IntroBtnSignup {margin-left: 50px;}
+	
+	.header {
+		background-color: #1D222A;
+		display: flex;
+		justify-content: space-around;
+		position: relative;
+		height: 70px;
+		width: 100%;
+		align-items: center;
+	}
+}
+
+@media only screen and (min-width: 401px){
+	
+	.welcomeFirstName{
+		font-family: 'Lobster', cursive;
+		margin-left: auto;
+	}
+}
